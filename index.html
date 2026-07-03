@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hekim Karar Destekli Pediatrik Doz Rehberi</title>
+    <title>Hekim Karar Destekli Pediatrik Doz Rehberi (Drugs.com Uyumlu)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Simgeleri -->
@@ -48,7 +47,7 @@
                 </div>
                 <div>
                     <h1 class="text-lg font-extrabold tracking-tight">Klinik Karar Destek Portalı</h1>
-                    <p class="text-[11px] text-slate-400 font-medium">Antibiyotik, NSAİİ, Parasetamol & Sıvı Hesaplama Sistemi</p>
+                    <p class="text-[11px] text-slate-400 font-medium">Drugs.com Pediatrik Dozaj Kalibrasyonlu Sistem</p>
                 </div>
             </div>
             <div class="flex gap-2">
@@ -63,11 +62,11 @@
     <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6 space-y-6">
 
         <!-- UYARI VE BİLGİLENDİRME PANELİ -->
-        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm flex gap-3 items-start print:hidden">
-            <i class="fa-solid fa-circle-exclamation text-amber-600 text-lg mt-0.5"></i>
+        <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-r-xl shadow-sm flex gap-3 items-start print:hidden">
+            <i class="fa-solid fa-circle-shield text-indigo-600 text-lg mt-0.5"></i>
             <div>
-                <h4 class="font-bold text-amber-950 text-sm">Profesyonel Hekim Asistanı Uyarısı</h4>
-                <p class="text-xs text-amber-800 mt-0.5 leading-relaxed">Bu portal, klinik notlarınızdaki dozaj aralıkları baz alınarak dijitalleştirilmiştir. <strong>Antibiyotikler için günlük toplam doz (mg/kg/gün)</strong>, <strong>Analjezikler için tek seferlik doz (mg/kg/doz)</strong> temel alınır. Hesaplamalar hekime pratiklik sağlamak içindir, nihai klinik karar hekime aittir.</p>
+                <h4 class="font-bold text-indigo-950 text-sm">Drugs.com Pediatrik Dozaj Kalibrasyonu & Yetişkin Doz Kilidi Aktif</h4>
+                <p class="text-xs text-indigo-800 mt-0.5 leading-relaxed">Bu portal, <strong>Drugs.com küresel standart pediatrik ilaç kılavuzlarına</strong> göre kalibre edilmiştir. Çocukların kilosu ne kadar yüksek olursa olsun, hesaplanan dozlar **asla maksimum yetişkin doz limitlerini aşamaz.** Tüm tedavi dozajları yarım veya tam standart kaşık/ölçek (2.5 ml / 5 ml) katlarına yuvarlanır. Reçete sepetinde resmî <strong>D / S</strong> kodlama standardı kullanılmaktadır.</p>
             </div>
         </div>
 
@@ -124,8 +123,8 @@
                     <i class="fa-solid fa-microscope text-indigo-400 text-xl"></i>
                 </div>
                 <div>
-                    <h3 class="text-base font-bold tracking-tight">Klinik Karar Paneli: Amoksisilin-Klavulanat Seçimi</h3>
-                    <p class="text-xs text-indigo-300">Hastanın kilosuna göre önerilen ticari formlar derecelendirilmiştir.</p>
+                    <h3 class="text-base font-bold tracking-tight">Klinik Karar Paneli: Amoksisilin-Klavulanat Form Seçimi</h3>
+                    <p class="text-xs text-indigo-300">Hastanın kilosuna göre en optimize ticari formlar otomatik olarak seçilir ve kilitlenir.</p>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="augmentin-cards">
@@ -160,23 +159,32 @@
                     </select>
                 </div>
 
-                <!-- Hedef Doz Sürgüsü -->
-                <div id="dose-slider-container">
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider" id="dose-label">Hedef Klinik Doz</label>
-                        <span id="dose-range-badge" class="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100"></span>
-                    </div>
-                    <div class="flex items-center gap-4 bg-slate-50 px-4 py-3 rounded-xl border border-slate-200">
-                        <input type="range" id="target-dose-slider" class="w-full accent-indigo-600 cursor-pointer" oninput="onSliderMove()">
-                        <span id="target-dose-val" class="font-mono font-black text-xl text-slate-800 min-w-[3rem] text-right">0</span>
+                <!-- SABİT STANDART DOZ BİLGİSİ -->
+                <div id="standard-dose-info-container" class="bg-indigo-50/50 border border-indigo-100 p-5 rounded-2xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Dozajlama Modu</span>
+                        <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-full font-black uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-lock text-[8px]"></i> Sabit Kılavuz Dozu
+                        </span>
                     </div>
                     
-                    <!-- Pratik Doz Seçimleri (Standart vs. Yüksek Doz) - Sadece Antibiyotiklerde -->
-                    <div class="flex gap-2 mt-3" id="quick-dose-buttons">
-                        <button onclick="quickSetDose(25)" class="flex-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-[10px] font-bold text-slate-600 rounded-lg transition-colors">Düşük/Standart (25)</button>
-                        <button onclick="quickSetDose(45)" class="flex-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-[10px] font-bold text-slate-600 rounded-lg transition-colors">Orta Doz (45)</button>
-                        <button onclick="quickSetDose(90)" class="flex-1 py-1.5 bg-rose-50 hover:bg-rose-100 text-[10px] font-bold text-rose-700 rounded-lg border border-rose-200 transition-colors" title="Dental Apse / Akut Otitis Media">Yüksek/Apse (90)</button>
+                    <div class="bg-white p-4 rounded-xl border border-indigo-50/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider" id="dose-type-label">Kılavuz Dozajı</span>
+                            <span id="standard-dose-val-display" class="font-black text-2xl text-indigo-950 font-mono">--</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Hekim Ayarı</span>
+                            <span class="text-xs font-extrabold text-slate-500 flex items-center gap-1 justify-end">
+                                <i class="fa-solid fa-ban text-rose-500"></i> Kilitli
+                            </span>
+                        </div>
                     </div>
+
+                    <p class="text-[11px] text-indigo-900/80 leading-relaxed font-medium">
+                        <i class="fa-solid fa-shield-halved text-indigo-600 mr-1"></i> 
+                        Bu ilacın standart pediatrik kılavuz dozu Drugs.com standartlarına göre kilitlenmiştir. Dozajlama hatalarını engellemek amacıyla hekimin manuel kaydırma yapması devre dışı bırakılmıştır.
+                    </p>
                 </div>
 
                 <!-- Dinamik Klinik Not -->
@@ -191,17 +199,24 @@
                 <div>
                     <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center justify-between mb-4">
                         <span class="flex items-center gap-2"><i class="fa-solid fa-chart-pie text-emerald-500"></i> Anlık Dozaj Raporu</span>
-                        <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded font-bold uppercase tracking-wider">Önizleme</span>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-circle-check"></i> Ölçek Uyumlu Güvenli Doz
+                        </span>
                     </h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Önemli Mililitre Kartı -->
                         <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 text-center md:col-span-3 flex flex-col sm:flex-row items-center justify-between gap-4">
                             <div class="text-left">
-                                <span class="text-xs font-bold text-emerald-800 uppercase tracking-wide block mb-1">Tek Seferde Verilecek Hacim</span>
+                                <span class="text-xs font-bold text-emerald-800 uppercase tracking-wide block mb-1">Tek Seferde Verilecek Ölçek</span>
                                 <div id="out-friendly-dose" class="text-sm font-semibold text-emerald-700">--</div>
                             </div>
                             <div id="res-ml" class="text-4xl font-black text-emerald-600 font-mono bg-white px-6 py-2 rounded-xl shadow-sm border border-emerald-100">-- ml</div>
+                        </div>
+
+                        <!-- Yetişkin Doz Limiti Uyarısı -->
+                        <div id="dose-cap-warning" class="hidden bg-amber-50 border border-amber-300 rounded-xl p-4 text-xs text-amber-900 font-bold flex items-start gap-2 md:col-span-3">
+                            <!-- JS ile dinamik doldurulacaktır -->
                         </div>
 
                         <!-- Dozaj Bilgi Kartları -->
@@ -247,7 +262,7 @@
             </div>
         </div>
 
-        <!-- REÇETE SEPETİ GÖRÜNÜMÜ (Sadece Reçetem Sekmesinde Görünür) -->
+        <!-- REÇETE SEPETİ GÖRÜNÜMÜ -->
         <div id="final-prescription-section" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-6 md:p-8 space-y-8">
             
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4 gap-4">
@@ -288,7 +303,7 @@
                 <div class="flex justify-between items-start border-b-2 border-indigo-900 pb-4">
                     <div class="space-y-1">
                         <h4 class="font-black text-indigo-950 text-lg uppercase tracking-tight">T.C. SAĞLIK PORTALI</h4>
-                        <p class="text-xs text-slate-600 font-bold uppercase tracking-widest">Klinik Reçete Şablonu</p>
+                        <p class="text-xs text-slate-600 font-bold uppercase tracking-widest">Klinik Reçete Şablonu (Drugs.com Standartlı)</p>
                     </div>
                     <div class="text-right text-[11px] text-slate-700 font-mono space-y-1">
                         <div><strong>Tarih:</strong> <span id="presc-date">--/--/----</span></div>
@@ -303,7 +318,7 @@
                         <strong class="text-slate-800">Pediatrik Vaka</strong>
                     </div>
                     <div class="text-right">
-                        <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wider mb-1">GÜNCEL AĞIRLIK:</span>
+                        <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wider mb-1">HASTA AĞIRLIĞI:</span>
                         <strong class="text-indigo-950 font-mono text-lg bg-indigo-50 px-2 py-0.5 rounded" id="presc-patient-weight">-- kg</strong>
                     </div>
                 </div>
@@ -322,7 +337,7 @@
                 <!-- Hekim Kaşesi Yer Tutucusu -->
                 <div class="flex justify-between items-end pt-12">
                     <div class="text-[10px] text-slate-500 font-medium w-1/2">
-                        * Bu belge, hekim karar destek sistemi kullanılarak oluşturulmuştur. Elektronik veya ıslak imza gerektirir.
+                        * Bu belge, drugs.com uluslararası veritabanı eşliğinde hekim karar destek sistemi kullanılarak oluşturulmuştur. Elektronik veya ıslak imza gerektirir.
                     </div>
                     <div class="text-center w-48 border-t border-slate-800 pt-2">
                         <p class="text-[11px] font-bold text-slate-800">Uzm. Dr. / Hekim Kaşesi & İmza</p>
@@ -333,49 +348,49 @@
             </div>
         </div>
 
-        <!-- BÖLÜM: KLİNİK KARAR VE SEÇİM KARTLARI (Bilgi Amaçlı) -->
+        <!-- BÖLÜM: KLİNİK KARAR VE SEÇİM KARTLARI -->
         <section id="clinical-cards-section" class="grid grid-cols-1 lg:grid-cols-2 gap-6 print:hidden">
             <!-- ANTİBİYOTİK KARAR GRUBU -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                 <div class="bg-slate-50 px-5 py-4 border-b border-slate-100 flex justify-between items-center">
                     <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
-                        <span class="w-2.5 h-4 bg-emerald-500 rounded-full"></span> Antibiyotik Grupları
+                        <span class="w-2.5 h-4 bg-emerald-500 rounded-full"></span> Antibiyotik Grupları (Drugs.com Uyumlu)
                     </h3>
                 </div>
                 <div class="p-5 space-y-4 flex-grow">
                     <div class="border border-slate-100 rounded-xl p-3 bg-slate-50/50">
                         <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-xs text-slate-800">Penisilin Grubu (İlk Tercih)</h4>
+                            <h4 class="font-bold text-xs text-slate-800">Penisilin Grubu</h4>
                             <span class="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">Amoksisilin / Klavulanat</span>
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div class="bg-white p-2 rounded-lg border border-slate-100 shadow-sm text-center">
-                                <span class="text-[9px] text-slate-400 block font-bold">STANDART (20-40 mg/kg)</span>
-                                <span class="text-[11px] font-semibold text-slate-700">Amoksisilin Süsp.</span>
+                                <span class="text-[9px] text-slate-400 block font-bold">MILD-MODERATE (25-45 mg/kg)</span>
+                                <span class="text-[11px] font-semibold text-slate-700">Amoksisilin / BID</span>
                             </div>
                             <div class="bg-white p-2 rounded-lg border border-slate-100 shadow-sm text-center">
-                                <span class="text-[9px] text-slate-400 block font-bold">GENİŞ (25-90 mg/kg)</span>
-                                <span class="text-[11px] font-semibold text-slate-700">Augmentin BID/ES</span>
+                                <span class="text-[9px] text-slate-400 block font-bold">SEVERE/AOM (90 mg/kg)</span>
+                                <span class="text-[11px] font-semibold text-slate-700">Augmentin ES 600</span>
                             </div>
                         </div>
                     </div>
                     <div class="border border-slate-100 rounded-xl p-3 bg-slate-50/50">
                         <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-xs text-slate-800">Sefalosporin & Alerji Alternatifleri</h4>
-                            <span class="text-[10px] font-mono font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">Sefaleksin / Klindamisin</span>
+                            <h4 class="font-bold text-xs text-slate-800">Sefalosporin & Diğer Alternatifler</h4>
+                            <span class="text-[10px] font-mono font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">Sefprozil / Sefuroksim / Sefiksim</span>
                         </div>
                         <div class="grid grid-cols-3 gap-2">
                             <div class="bg-white p-2 rounded-lg border border-slate-100 shadow-sm text-center">
                                 <span class="text-[9px] text-slate-400 block font-bold">SEFALEKSİN</span>
-                                <span class="text-[10px] font-semibold text-slate-700">25-100 mg/kg</span>
+                                <span class="text-[10px] font-semibold text-slate-700">25-50 mg/kg</span>
                             </div>
                             <div class="bg-white p-2 rounded-lg border border-slate-100 shadow-sm text-center">
-                                <span class="text-[9px] text-slate-400 block font-bold">KLİNDAMİSİN</span>
-                                <span class="text-[10px] font-semibold text-slate-700">10-30 mg/kg</span>
+                                <span class="text-[9px] text-slate-400 block font-bold">SEFPROZİL</span>
+                                <span class="text-[10px] font-semibold text-slate-700">15-30 mg/kg</span>
                             </div>
                             <div class="bg-white p-2 rounded-lg border border-slate-100 shadow-sm text-center">
-                                <span class="text-[9px] text-slate-400 block font-bold">AZİTROMİSİN</span>
-                                <span class="text-[10px] font-semibold text-slate-700">10 mg/kg</span>
+                                <span class="text-[9px] text-slate-400 block font-bold">SEFİKASİM</span>
+                                <span class="text-[10px] font-semibold text-slate-700">8 mg/kg</span>
                             </div>
                         </div>
                     </div>
@@ -386,18 +401,18 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                 <div class="bg-slate-50 px-5 py-4 border-b border-slate-100 flex justify-between items-center">
                     <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
-                        <span class="w-2.5 h-4 bg-indigo-500 rounded-full"></span> Analjezik & Antipiretik
+                        <span class="w-2.5 h-4 bg-indigo-500 rounded-full"></span> Analjezik & Antipiretik (Drugs.com)
                     </h3>
                 </div>
                 <div class="p-5 space-y-4 flex-grow">
                     <div class="border border-indigo-100 rounded-xl p-3 bg-indigo-50/30">
                         <div class="flex justify-between items-center mb-2">
                             <h4 class="font-bold text-xs text-indigo-950 flex items-center gap-1.5">
-                                <i class="fa-solid fa-temperature-arrow-down text-indigo-500"></i> Parasetamol (Ateş)
+                                <i class="fa-solid fa-temperature-arrow-down text-indigo-500"></i> Parasetamol (Acetaminophen)
                             </h4>
-                            <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded">10 - 15 mg/kg/doz</span>
+                            <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded">10-15 mg/kg/doz</span>
                         </div>
-                        <p class="text-[11px] text-slate-600 mb-2">En güvenli birinci basamak ateş düşürücü. Minimum 4 saat ara.</p>
+                        <p class="text-[11px] text-slate-600 mb-2">Güvenli ve standart çocuk ateşi düşürücü. 4-6 saat ara ile uygulanabilir (max 5 doz/gün).</p>
                         <div class="grid grid-cols-2 gap-2">
                             <div class="bg-white p-2 rounded-lg border border-indigo-100/60 shadow-sm text-center">
                                 <span class="text-[9px] text-slate-400 block font-bold">CALPOL / PAROL</span>
@@ -410,9 +425,9 @@
                             <h4 class="font-bold text-xs text-rose-950 flex items-center gap-1.5">
                                 <i class="fa-solid fa-fire-flame-curved text-rose-500"></i> İbuprofen (NSAİİ)
                             </h4>
-                            <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded">4 - 10 mg/kg/doz</span>
+                            <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded">4-10 mg/kg/doz</span>
                         </div>
-                        <p class="text-[11px] text-slate-600 mb-2">Antiinflamatuar etkinlik. Diş ağrısında etkili. Tok karnına. Min 6-8 saat.</p>
+                        <p class="text-[11px] text-slate-600 mb-2">Fever/Pain azaltıcı, antiinflamatuar etkinlik. 6-8 saatte bir verilebilir (max 40 mg/kg/gün).</p>
                         <div class="grid grid-cols-3 gap-2">
                             <div class="bg-white p-2 rounded-lg border border-rose-100/60 shadow-sm text-center">
                                 <span class="text-[9px] text-slate-400 block font-bold">DOLVEN vb.</span>
@@ -428,7 +443,7 @@
         <section id="quick-reference-table" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden print:hidden">
             <div class="bg-slate-50/80 px-5 py-4 border-b border-slate-200 flex items-center justify-between cursor-pointer" onclick="document.getElementById('table-content').classList.toggle('hidden')">
                 <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
-                    <span class="w-3 h-4 bg-slate-700 rounded-full"></span> Hızlı Başvuru Tablosu (Genişlet/Daralt)
+                    <span class="w-3 h-4 bg-slate-700 rounded-full"></span> Hızlı Başvuru Tablosu (Drugs.com Verileri)
                 </h3>
                 <i class="fa-solid fa-chevron-down text-slate-400"></i>
             </div>
@@ -438,7 +453,7 @@
                         <tr class="bg-slate-100/50 border-b border-slate-200 text-[10px] text-slate-500 uppercase font-black tracking-wider">
                             <th class="py-3 px-5">Grup</th>
                             <th class="py-3 px-5">Etken Madde</th>
-                            <th class="py-3 px-5">Klinik Doz Limitleri</th>
+                            <th class="py-3 px-5">Standard Klinik Dozu</th>
                             <th class="py-3 px-5">Hacim Formülasyonu</th>
                             <th class="py-3 px-5">Sıklık Şeması</th>
                         </tr>
@@ -446,31 +461,38 @@
                     <tbody class="divide-y divide-slate-100 text-xs text-slate-700">
                         <tr>
                             <td class="py-3 px-5 font-bold text-emerald-700 bg-emerald-50/10">Antibiyotik</td>
-                            <td class="py-3 px-5 font-semibold text-slate-800">Amoksisilin + Klavulanat</td>
-                            <td class="py-3 px-5 font-mono text-slate-600">25 - 90 mg/kg/gün</td>
-                            <td class="py-3 px-5 font-mono text-slate-500">200mg / 400mg / 600mg per 5ml</td>
+                            <td class="py-3 px-5 font-semibold text-slate-800">Amoksisilin + Klavulanat (Standard)</td>
+                            <td class="py-3 px-5 font-mono text-slate-600">30 mg/kg/gün (25-45 arası)</td>
+                            <td class="py-3 px-5 font-mono text-slate-500">200mg / 400mg per 5ml</td>
                             <td class="py-3 px-5"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold text-[10px]">BID (12 Saat)</span></td>
                         </tr>
                         <tr>
                             <td class="py-3 px-5 font-bold text-emerald-700 bg-emerald-50/10">Antibiyotik</td>
-                            <td class="py-3 px-5 font-semibold text-slate-800">Klindamisin</td>
-                            <td class="py-3 px-5 font-mono text-slate-600">10 - 30 mg/kg/gün</td>
-                            <td class="py-3 px-5 font-mono text-slate-500">75 mg / 5ml</td>
-                            <td class="py-3 px-5"><span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-bold text-[10px]">TID (8 Saat)</span></td>
+                            <td class="py-3 px-5 font-semibold text-slate-800">Amoksisilin + Klavulanat (ES)</td>
+                            <td class="py-3 px-5 font-mono text-slate-600">90 mg/kg/gün</td>
+                            <td class="py-3 px-5 font-mono text-slate-500">600mg per 5ml</td>
+                            <td class="py-3 px-5"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold text-[10px]">BID (12 Saat)</span></td>
                         </tr>
                         <tr>
-                            <td class="py-3 px-5 font-bold text-indigo-700 bg-indigo-50/10">Analjezik</td>
-                            <td class="py-3 px-5 font-semibold text-slate-800">Parasetamol (Calpol/Parol)</td>
-                            <td class="py-3 px-5 font-mono text-indigo-600 font-semibold">10 - 15 mg/kg/doz</td>
-                            <td class="py-3 px-5 font-mono text-slate-500">125mg / 250mg per 5ml</td>
-                            <td class="py-3 px-5"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold text-[10px]">4-6 Saat</span></td>
-                        </tr>
-                        <tr>
-                            <td class="py-3 px-5 font-bold text-rose-700 bg-rose-50/10">NSAİİ</td>
-                            <td class="py-3 px-5 font-semibold text-slate-800">İbuprofen (Dolven vb.)</td>
-                            <td class="py-3 px-5 font-mono text-rose-600 font-semibold">4 - 10 mg/kg/doz</td>
+                            <td class="py-3 px-5 font-bold text-emerald-700 bg-emerald-50/10">Antibiyotik</td>
+                            <td class="py-3 px-5 font-semibold text-slate-800">Sefiksim (Suprax vb.)</td>
+                            <td class="py-3 px-5 font-mono text-slate-600">8 mg/kg/gün</td>
                             <td class="py-3 px-5 font-mono text-slate-500">100 mg / 5ml</td>
-                            <td class="py-3 px-5"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold text-[10px]">6-8 Saat</span></td>
+                            <td class="py-3 px-5"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold text-[10px]">QD (24 Saat)</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 px-5 font-bold text-emerald-700 bg-emerald-50/10">Antibiyotik</td>
+                            <td class="py-3 px-5 font-semibold text-slate-800">Sefprozil (Sefzil vb.)</td>
+                            <td class="py-3 px-5 font-mono text-slate-600">15 mg/kg/gün</td>
+                            <td class="py-3 px-5 font-mono text-slate-500">250 mg / 5ml</td>
+                            <td class="py-3 px-5"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold text-[10px]">BID (12 Saat)</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 px-5 font-bold text-emerald-700 bg-emerald-50/10">Antibiyotik</td>
+                            <td class="py-3 px-5 font-semibold text-slate-800">Klaritromisin (Macrol vb.)</td>
+                            <td class="py-3 px-5 font-mono text-slate-600">15 mg/kg/gün</td>
+                            <td class="py-3 px-5 font-mono text-slate-500">125 mg / 5ml</td>
+                            <td class="py-3 px-5"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold text-[10px]">BID (12 Saat)</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -482,28 +504,32 @@
     <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-500 py-6 text-center text-xs border-t border-slate-800 mt-auto print:hidden">
         <p class="font-semibold text-slate-400">© 2026 Klinik Karar Destekli Pediatrik Dozaj Modülü.</p>
-        <p class="mt-1.5 max-w-2xl mx-auto">Tüm veriler cihazınızda (istemci tarafında) hesaplanır, hiçbir yere kaydedilmez. Sorumluluk reçeteyi imzalayan hekime aittir.</p>
+        <p class="mt-1.5 max-w-2xl mx-auto">Tüm veriler Drugs.com pediatrik yönergeleri kullanılarak cihazınızda hesaplanır, hiçbir yere kaydedilmez. Sorumluluk reçeteyi imzalayan hekime aittir.</p>
     </footer>
 
     <!-- INTERAKTIF JS MOTORU -->
     <script>
-        // Birleşik İlaç Veritabanı
+        // Drugs.com Çocuk Dozları ile Kalibre Edilmiş Güvenli Pediatrik Dozaj Veritabanı
+        // Çocuk dozlarının yetişkin doz tavan limitlerini (maxAdultSingleDose ve maxAdultDailyDose) aşmasını engelleyen emniyet kilitleri entegre edilmiştir.
         const DB = {
             antibiotic: [
-                { id: "aug_200", label: "Augmentin BID 200/28mg (Amok+Klav)", min: 25, max: 45, conc: 200, freq: 2, tType: "daily", note: "Sabah ve akşam tok karnına", warning: "Diyare riskine karşı probiyotik eklenebilir." },
-                { id: "aug_400", label: "Augmentin BID 400/57mg (Amok+Klav)", min: 25, max: 45, conc: 400, freq: 2, tType: "daily", note: "Sabah ve akşam tok karnına", warning: "Standart kilodaki çocuklarda hacmi optimize eder." },
-                { id: "aug_es", label: "Augmentin ES 600/42.9mg (Amok+Klav)", min: 45, max: 90, conc: 600, freq: 2, tType: "daily", note: "Sabah ve akşam tok karnına", warning: "Akut otitis media ve şiddetli dental apselerde (Yüksek Doz Amoksisilin)." },
-                { id: "amox_250", label: "Amoksisilin Süsp. 250mg/5ml", min: 20, max: 40, conc: 250, freq: 3, tType: "daily", note: "Günde 3 defa", warning: "Klavulanik asit tolere edemeyenlerde veya basit enfeksiyonlarda." },
-                { id: "duocid", label: "Duocid Süsp. 250mg/5ml (Sultamisilin)", min: 25, max: 50, conc: 250, freq: 2, tType: "daily", note: "Günde 2 defa", warning: "Amoksisilin direncinde iyi bir alternatif formdur." },
-                { id: "sefaleksin", label: "Sefaleksin Süsp. 250mg/5ml (Sef vb.)", min: 25, max: 100, conc: 250, freq: 3, tType: "daily", note: "Günde 3 defa", warning: "1. kuşak sefalosporin, cilt/yumuşak doku enfeksiyonlarında etkilidir." },
-                { id: "sefuroks", label: "Cefaks/Sefuroks 125mg/5ml (Sefuroksim)", min: 10, max: 15, conc: 125, freq: 2, tType: "daily", note: "Günde 2 defa", warning: "2. kuşak sefalosporin." },
-                { id: "cleocin", label: "Cleocin Pediatrik 75mg/5ml (Klindamisin)", min: 10, max: 30, conc: 75, freq: 3, tType: "daily", note: "Günde 3 defa", warning: "Penisilin alerjisinde veya dirençli anaerobik odontojenik enfeksiyonlarda." },
-                { id: "azitro", label: "Azitro 200mg/5ml (Azitromisin)", min: 10, max: 10, conc: 200, freq: 1, tType: "daily", note: "Günde sadece 1 kez (Aç)", warning: "Makrolid grubu, genelde 3 günlük kısa tedavi protokolü." }
+                { id: "aug_200", label: "Augmentin BID 200/28mg (Amok+Klav)", stdDose: 30, conc: 200, freq: 2, tType: "daily", note: "Sabah ve akşam tok karnına", warning: "Drugs.com standardı: Hafif-orta enfeksiyonlarda 25-45 mg/kg/gün (Amoksisilin bileşeni baz alınarak 30 mg/kg/gün kilitlenmiştir).", maxAdultSingleDose: 875, maxAdultDailyDose: 1750 },
+                { id: "aug_400", label: "Augmentin BID 400/57mg (Amok+Klav)", stdDose: 30, conc: 400, freq: 2, tType: "daily", note: "Sabah ve akşam tok karnına", warning: "Drugs.com standardı: Hafif-orta enfeksiyonlarda 25-45 mg/kg/gün (Amoksisilin bileşeni baz alınarak 30 mg/kg/gün kilitlenmiştir).", maxAdultSingleDose: 875, maxAdultDailyDose: 1750 },
+                { id: "aug_es", label: "Augmentin ES 600/42.9mg (Amok+Klav)", stdDose: 90, conc: 600, freq: 2, tType: "daily", note: "Sabah ve akşam tok karnına", warning: "Drugs.com standardı: Akut otitis media ve şiddetli dental apselerde ES standart dozu: 90 mg/kg/gün.", maxAdultSingleDose: 1000, maxAdultDailyDose: 2000 },
+                { id: "amox_250", label: "Amoksisilin Süsp. 250mg/5ml (Alfoxil vb.)", stdDose: 30, conc: 250, freq: 3, tType: "daily", note: "Günde 3 defa", warning: "Drugs.com standardı: Hafif-orta enfeksiyonlarda 20-40 mg/kg/gün (8 saat arayla, 30 mg/kg/gün kilitlenmiştir).", maxAdultSingleDose: 500, maxAdultDailyDose: 1500 },
+                { id: "sefprozil", label: "Sefprozil Süsp. 250mg/5ml (Sefzil vb.)", stdDose: 15, conc: 250, freq: 2, tType: "daily", note: "Günde 2 defa", warning: "Drugs.com standardı: Farenjit/Tonsillit için 15 mg/kg/gün (12 saat arayla kilitlenmiştir).", maxAdultSingleDose: 500, maxAdultDailyDose: 1000 },
+                { id: "sefuroks", label: "Sefuroksim Aksetil 125mg/5ml (Cefaks vb.)", stdDose: 20, conc: 125, freq: 2, tType: "daily", note: "Günde 2 defa", warning: "Drugs.com standardı: Farenjit ve tonsillit tedavisi için 20 mg/kg/gün (12 saat arayla kilitlenmiştir).", maxAdultSingleDose: 250, maxAdultDailyDose: 500 },
+                { id: "sefiksim", label: "Sefiksim Süsp. 100mg/5ml (Suprax vb.)", stdDose: 8, conc: 100, freq: 1, tType: "daily", note: "Günde 1 defa", warning: "Drugs.com standardı: Komplike olmayan İdrar Yolu ve Otitis Media için 8 mg/kg/gün (24 saat arayla).", maxAdultSingleDose: 400, maxAdultDailyDose: 400 },
+                { id: "klaritro", label: "Klaritromisin Süsp. 125mg/5ml (Macrol vb.)", stdDose: 15, conc: 125, freq: 2, tType: "daily", note: "Günde 2 defa", warning: "Drugs.com standardı: Genel pediatrik dozaj şeması 15 mg/kg/gün (12 saat arayla).", maxAdultSingleDose: 500, maxAdultDailyDose: 1000 },
+                { id: "sefaleksin", label: "Sefaleksin Süsp. 250mg/5ml (Sef vb.)", stdDose: 25, conc: 250, freq: 4, tType: "daily", note: "Günde 4 defa", warning: "Drugs.com standardı: Hafif-orta enfeksiyonlar için 25-50 mg/kg/gün (6 saat arayla, 25 mg/kg/gün kilitlenmiştir).", maxAdultSingleDose: 1000, maxAdultDailyDose: 4000 },
+                { id: "sefaklor", label: "Sefaklor Süsp. 125mg/5ml (Ceclor vb.)", stdDose: 20, conc: 125, freq: 3, tType: "daily", note: "Günde 3 defa", warning: "Drugs.com standardı: Standart pediatrik doz 20 mg/kg/gün (8 saat arayla kilitlenmiştir).", maxAdultSingleDose: 500, maxAdultDailyDose: 1500 },
+                { id: "cleocin", label: "Cleocin Pediatrik 75mg/5ml (Klindamisin)", stdDose: 15, conc: 75, freq: 3, tType: "daily", note: "Günde 3 defa", warning: "Drugs.com standardı: Ciddi enfeksiyonlar için 8-25 mg/kg/gün (15 mg/kg/gün kilitlenmiştir).", maxAdultSingleDose: 600, maxAdultDailyDose: 1800 },
+                { id: "azitro", label: "Azitro 200mg/5ml (Azitromisin)", stdDose: 10, conc: 200, freq: 1, tType: "daily", note: "Günde sadece 1 kez (Aç)", warning: "Drugs.com standardı: Otitis media ve farenjit için 10 mg/kg/gün (24 saat arayla - 3 gün süreyle kilitlenmiştir).", maxAdultSingleDose: 500, maxAdultDailyDose: 500 }
             ],
             analgesic: [
-                { id: "calpol", label: "Calpol Süsp. 125mg/5ml (Parasetamol)", min: 10, max: 15, conc: 125, freq: 4, tType: "per_dose", note: "Ağrı/ateş durumunda 4-6 saatte bir", gapHours: "4-6", warning: "Max doz aşımı karaciğer toksisitesi yapar. Günlük 4-6 dozu aşmayın." },
-                { id: "parol", label: "Parol Süsp. 250mg/5ml (Parasetamol)", min: 10, max: 15, conc: 250, freq: 4, tType: "per_dose", note: "Ağrı/ateş durumunda 4-6 saatte bir", gapHours: "4-6", warning: "Yüksek kilolularda içilecek hacmi azaltmak için faydalıdır." },
-                { id: "dolven", label: "Dolven/Pedifen/İbufen 100mg/5ml (İbuprofen)", min: 4, max: 10, conc: 100, freq: 3, tType: "per_dose", note: "Ağrı durumunda tok karnına 6-8 saatte bir", gapHours: "6-8", warning: "6 aydan küçüklerde kullanılmaz. Gastrik iritasyon yapabilir, mutlaka tok verin." }
+                { id: "calpol", label: "Calpol Süsp. 125mg/5ml (Parasetamol)", stdDose: 15, conc: 125, freq: 4, tType: "per_dose", note: "Ağrı/ateş durumunda 4-6 saatte bir", gapHours: "4-6", warning: "Drugs.com standardı: 10-15 mg/kg/doz (Günde max 5 doz, max 75 mg/kg/gün; 15 mg/kg/doz kilitlenmiştir).", maxAdultSingleDose: 1000, maxAdultDailyDose: 4000 },
+                { id: "parol", label: "Parol Süsp. 250mg/5ml (Parasetamol)", stdDose: 15, conc: 250, freq: 4, tType: "per_dose", note: "Ağrı/ateş durumunda 4-6 saatte bir", gapHours: "4-6", warning: "Drugs.com standardı: Hacim yükünü azaltmak amacıyla kilitli standart doz: 15 mg/kg/doz.", maxAdultSingleDose: 1000, maxAdultDailyDose: 4000 },
+                { id: "dolven", label: "Dolven/Pedifen/İbufen 100mg/5ml (İbuprofen)", stdDose: 10, conc: 100, freq: 3, tType: "per_dose", note: "Ağrı durumunda tok karnına 6-8 saatte bir", gapHours: "6-8", warning: "Drugs.com standardı: Ateş ve ağrı için 4-10 mg/kg/doz (6-8 saatte bir, 10 mg/kg/doz kilitlenmiştir).", maxAdultSingleDose: 400, maxAdultDailyDose: 1200 }
             ]
         };
 
@@ -560,12 +586,12 @@
                 if (tabId === 'fluid') {
                     document.getElementById('height-container').classList.remove('hidden');
                     document.getElementById('drug-select-container').classList.add('hidden');
-                    document.getElementById('dose-slider-container').classList.add('hidden');
+                    document.getElementById('standard-dose-info-container').classList.add('hidden');
                     document.getElementById('augmentin-decision-portal').classList.add('hidden');
                 } else {
                     document.getElementById('height-container').classList.add('hidden');
                     document.getElementById('drug-select-container').classList.remove('hidden');
-                    document.getElementById('dose-slider-container').classList.remove('hidden');
+                    document.getElementById('standard-dose-info-container').classList.remove('hidden');
                     
                     if (tabId === 'antibiotic') {
                         document.getElementById('augmentin-decision-portal').classList.remove('hidden');
@@ -603,49 +629,23 @@
 
             if(!drug) return;
 
-            const slider = document.getElementById('target-dose-slider');
-            slider.min = drug.min;
-            slider.max = drug.max;
-            slider.value = drug.max;
-            
-            document.getElementById('dose-label').innerText = drug.tType === 'daily' ? 'Günlük Hedef Doz (mg/kg/gün)' : 'Seferlik Dozaj (mg/kg/doz)';
-            document.getElementById('dose-range-badge').innerText = `${drug.min} - ${drug.max} mg/kg`;
-            document.getElementById('target-dose-val').innerText = slider.value;
+            // UI güncellemesi
+            document.getElementById('dose-type-label').innerText = drug.tType === 'daily' ? 'Kılavuz Günlük Dozu' : 'Kılavuz Tek Seferlik Dozu';
+            document.getElementById('standard-dose-val-display').innerText = `${drug.stdDose} mg/kg`;
             document.getElementById('dynamic-warning-text').innerText = drug.warning || "Özel klinik uyarı bulunmamaktadır.";
 
             if (drug.tType === 'daily') {
                 document.getElementById('result-mg-title').innerText = "Günlük Toplam Doz";
                 document.getElementById('result-freq-title').innerText = "Günde Kaç Defa?";
-                document.getElementById('quick-dose-buttons').classList.remove('hidden');
             } else {
                 document.getElementById('result-mg-title').innerText = "Seferlik Doz";
-                document.getElementById('result-freq-title').innerText = "Önerilen Aralık";
-                document.getElementById('quick-dose-buttons').classList.add('hidden');
+                document.getElementById('result-freq-title').innerText = "Dozlama Sıklığı";
             }
 
             runCalculation();
         }
 
-        // Sürgü Ayarlandığında
-        function onSliderMove() {
-            const slider = document.getElementById('target-dose-slider');
-            document.getElementById('target-dose-val').innerText = slider.value;
-            runCalculation();
-        }
-
-        // Pratik Doz Seçimleri
-        function quickSetDose(value) {
-            const slider = document.getElementById('target-dose-slider');
-            const max = parseFloat(slider.max);
-            const min = parseFloat(slider.min);
-            if(value >= min && value <= max) {
-                slider.value = value;
-                document.getElementById('target-dose-val').innerText = value;
-                runCalculation();
-            }
-        }
-
-        // Akıllı Augmentin Öneri Algoritması
+        // Akıllı Augmentin Öneri Algoritması (Kilo bazlı otomatik seçim ve kilit sistemi)
         function generateAugmentinDecision(weight) {
             const container = document.getElementById('augmentin-cards');
             container.innerHTML = "";
@@ -653,46 +653,44 @@
             const options = [
                 {
                     id: "aug_200", name: "Augmentin BID 200", doseDesc: "200mg/28.5mg / 5ml",
-                    reason: "Düşük kilolularda hassas doz ayarlaması için ideal."
+                    reason: "12 kg altındaki bebek ve çocuklarda tam ve yarım ölçeklerin hassas ölçümü için otomatik seçilir."
                 },
                 {
                     id: "aug_400", name: "Augmentin BID 400", doseDesc: "400mg/57mg / 5ml",
-                    reason: "Standart kilo grubunda alınacak şurup hacmini azaltır."
+                    reason: "12 - 25 kg arasındaki çocuklarda standart ölçek dengesi sağlamak amacıyla otomatik seçilir."
                 },
                 {
                     id: "aug_es", name: "Augmentin ES 600", doseDesc: "600mg/42.9mg / 5ml",
-                    reason: "Dirençli enfeksiyon ve apselerde ES formu (Yüksek Doz) seçilmelidir."
+                    reason: "25 kg üzerindeki çocuklarda veya şiddetli dirençli enfeksiyonlarda hacmi optimize etmek için otomatik seçilir."
                 }
             ];
 
             options.forEach(opt => {
-                let badgeColor = "bg-indigo-800 text-indigo-200 border-indigo-700";
-                let statusText = "Uygun";
-                let choiceBorder = "border-indigo-800 hover:border-indigo-400";
+                let badgeColor = "bg-slate-800 text-slate-400 border-slate-700";
+                let statusText = "Kilo Uyumsuz";
+                let choiceBorder = "border-slate-800/40 opacity-50 cursor-not-allowed";
+                let isActive = false;
                 
+                // Aktif formu belirle
                 if (weight < 12 && opt.id === "aug_200") {
-                    badgeColor = "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
-                    statusText = "Birincil Öneri";
-                    choiceBorder = "border-emerald-500 bg-emerald-900/20 ring-1 ring-emerald-500/30";
+                    isActive = true;
                 } else if (weight >= 12 && weight <= 25 && opt.id === "aug_400") {
-                    badgeColor = "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
-                    statusText = "Birincil Öneri";
-                    choiceBorder = "border-emerald-500 bg-emerald-900/20 ring-1 ring-emerald-500/30";
+                    isActive = true;
                 } else if (weight > 25 && opt.id === "aug_es") {
+                    isActive = true;
+                }
+
+                if (isActive) {
                     badgeColor = "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
-                    statusText = "Birincil Öneri / Yüksek Doz";
-                    choiceBorder = "border-emerald-500 bg-emerald-900/20 ring-1 ring-emerald-500/30";
+                    statusText = "OTOMATİK AKTİF";
+                    choiceBorder = "border-emerald-500 bg-emerald-950/40 ring-2 ring-emerald-500/50 shadow-lg shadow-emerald-900/20";
                 }
 
                 const card = document.createElement('div');
-                card.className = `p-4 rounded-xl border bg-indigo-900/40 cursor-pointer transition-all ${choiceBorder} flex flex-col justify-between space-y-2`;
-                card.onclick = () => {
-                    const select = document.getElementById('drug-select');
-                    select.value = opt.id;
-                    onDrugChange();
-                    // Scroll to calculator
-                    document.getElementById('calculator-section-group').scrollIntoView({behavior: 'smooth', block: 'center'});
-                };
+                card.className = `p-4 rounded-xl border transition-all ${choiceBorder} flex flex-col justify-between space-y-2`;
+                if (!isActive) {
+                    card.title = "Bu preparat mevcut hasta kilosu ile kilitlenmiştir.";
+                }
 
                 card.innerHTML = `
                     <div class="flex justify-between items-start">
@@ -706,7 +704,31 @@
             });
         }
 
-        // Ana Hesaplama Fonksiyonu
+        // Helper: Sayıları Türkçe Metne Çevirme
+        function getTurkishWordForNumber(num) {
+            const words = ["SIFIR", "BİR", "İKİ", "ÜÇ", "DÖRT", "BEŞ", "ALTI", "YEDİ", "SEKİZ", "DOKUZ", "ON"];
+            return words[num] || num.toString().toUpperCase();
+        }
+
+        // Helper: Ölçek Metnini Al
+        function getSpoonText(ml) {
+            if (ml === 2.5) return "1/2 Ölçek";
+            if (ml === 5) return "1 Ölçek";
+            if (ml === 7.5) return "1.5 Ölçek";
+            if (ml === 10) return "2 Ölçek";
+            if (ml === 12.5) return "2.5 Ölçek";
+            if (ml === 15) return "3 Ölçek";
+            
+            // Eğer küsuratlı bir şey kalırsa
+            const rawSpoons = ml / 5;
+            if (rawSpoons % 1 === 0) {
+                return `${rawSpoons} Ölçek`;
+            } else {
+                return `${rawSpoons.toFixed(1)} Ölçek`;
+            }
+        }
+
+        // Ana Hesaplama Fonksiyonu (Yalnızca standart ölçek katlarına yuvarlama & Yetişkin dozu aşım koruması)
         function runCalculation() {
             const weight = parseFloat(document.getElementById('weight').value) || 15;
             const height = parseFloat(document.getElementById('height').value) || 105;
@@ -714,6 +736,26 @@
             // Augmentin panelini güncelle
             if (currentTab === 'antibiotic') {
                 generateAugmentinDecision(weight);
+                
+                // Seçili ilaç Augmentin ise kilo sınırına göre preparat değişikliğini otomatik yap
+                const select = document.getElementById('drug-select');
+                if (select) {
+                    let selectedId = select.value;
+                    if (selectedId && selectedId.startsWith('aug_')) {
+                        let targetId = 'aug_400';
+                        if (weight < 12) {
+                            targetId = 'aug_200';
+                        } else if (weight > 25) {
+                            targetId = 'aug_es';
+                        }
+                        
+                        if (selectedId !== targetId) {
+                            select.value = targetId;
+                            onDrugChange();
+                            return; 
+                        }
+                    }
+                }
             }
 
             // Sıvı Sekmesi ise farklı işlem
@@ -727,50 +769,107 @@
             const drug = DB[currentTab].find(d => d.id === selectedId);
             if (!drug) return;
 
-            const targetDose = parseFloat(document.getElementById('target-dose-slider').value);
+            // Kilitli Kılavuz Dozu
+            const targetDose = drug.stdDose;
 
             let totalMg, singleMg, singleMl, freqText, freqDescText;
+            let isCapped = false;
 
+            // 1. ADIM: Ham ağırlık dozaj hesaplamasını yap ve yetişkin tavan değerleriyle karşılaştır
             if (drug.tType === "daily") {
-                totalMg = weight * targetDose;
-                singleMg = totalMg / drug.freq;
+                let calculatedTotalMg = weight * targetDose;
+                totalMg = Math.min(calculatedTotalMg, drug.maxAdultDailyDose);
+                if (totalMg < calculatedTotalMg) {
+                    isCapped = true;
+                }
+
+                let calculatedSingleMg = totalMg / drug.freq;
+                singleMg = Math.min(calculatedSingleMg, drug.maxAdultSingleDose);
+                if (singleMg < calculatedSingleMg) {
+                    isCapped = true;
+                }
+
+                // Tek doz limitten dolayı kısıtlandıysa günlük toplam dozu da yeniden doğrula
+                totalMg = singleMg * drug.freq;
                 singleMl = (singleMg / drug.conc) * 5;
                 freqText = `${drug.freq} Sefer`;
                 freqDescText = `${Math.round(24/drug.freq)} Saatte Bir`;
             } else {
-                singleMg = weight * targetDose;
+                let calculatedSingleMg = weight * targetDose;
+                singleMg = Math.min(calculatedSingleMg, drug.maxAdultSingleDose);
+                if (singleMg < calculatedSingleMg) {
+                    isCapped = true;
+                }
+
                 totalMg = singleMg; 
                 singleMl = (singleMg / drug.conc) * 5;
                 freqText = `${drug.gapHours} Saat`;
                 freqDescText = `İhtiyaç Halinde`;
             }
 
-            const roundedMl = Math.round(singleMl * 10) / 10;
+            // 2. ADIM: En yakın 2.5 ml katına (yarım ölçek adımlarına) yuvarla
+            let halfSpoonCount = Math.round(singleMl / 2.5);
+            if (halfSpoonCount < 1) halfSpoonCount = 1; // En az yarım ölçek verilsin
 
-            document.getElementById('res-mg').innerText = `${Math.round(totalMg)} mg`;
+            // 3. ADIM: Yuvarlama nedeniyle hedeflenen maksimum dozların tekrar aşılmadığından emin ol
+            let finalSpoonMl = halfSpoonCount * 2.5;
+            let administeredSingleMg = (finalSpoonMl * drug.conc) / 5;
+            
+            // Eğer yuvarlama nedeniyle yetişkin tavan limiti aşılıyorsa bir kademe (yarım ölçek) aşağı yuvarla
+            while (halfSpoonCount > 1 && (administeredSingleMg > drug.maxAdultSingleDose || (drug.tType === "daily" && administeredSingleMg * drug.freq > drug.maxAdultDailyDose))) {
+                halfSpoonCount--;
+                finalSpoonMl = halfSpoonCount * 2.5;
+                administeredSingleMg = (finalSpoonMl * drug.conc) / 5;
+                isCapped = true;
+            }
+
+            const administeredTotalMg = drug.tType === "daily" ? administeredSingleMg * drug.freq : administeredSingleMg;
+
+            // 4. ADIM: Limit uyarısını ekranda göster / gizle
+            const capWarningDiv = document.getElementById('dose-cap-warning');
+            if (capWarningDiv) {
+                if (isCapped) {
+                    capWarningDiv.innerHTML = `
+                        <div class="flex gap-2 items-start text-amber-900 leading-relaxed font-semibold">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg mt-0.5"></i>
+                            <div>
+                                <span class="block text-[11px] uppercase tracking-wider font-extrabold text-amber-950 mb-0.5">Yetişkin Doz Tavan Sınırı Devrede</span>
+                                Hesaplanan çocuk dozu yetişkin maksimum doz sınırına ulaştığı için otomatik olarak limitlenmiştir! (Maksimum Tek Doz: ${drug.maxAdultSingleDose} mg, Maksimum Günlük Doz: ${drug.maxAdultDailyDose} mg).
+                            </div>
+                        </div>
+                    `;
+                    capWarningDiv.classList.remove('hidden');
+                } else {
+                    capWarningDiv.classList.add('hidden');
+                }
+            }
+
+            document.getElementById('res-mg').innerText = `${Math.round(administeredTotalMg)} mg`;
             document.getElementById('res-freq').innerText = freqText;
             document.getElementById('res-freq-desc').innerText = freqDescText;
-            document.getElementById('res-ml').innerText = `${roundedMl} ml`;
-            document.getElementById('res-ml-sub').innerText = `${Math.round(singleMg)} mg aktif madde/doz`;
+            document.getElementById('res-ml').innerText = `${finalSpoonMl} ml`;
+            document.getElementById('res-ml-sub').innerText = `${Math.round(administeredSingleMg)} mg aktif madde/doz`;
 
             document.getElementById('out-prep-name').innerText = drug.label.split('(')[0].trim();
 
             let friendlyDose = "";
-            const halfSpoonCount = Math.round(roundedMl / 2.5);
-
-            if (halfSpoonCount === 1) friendlyDose = "Yarım Ölçek (2.5 ml)";
-            else if (halfSpoonCount === 2) friendlyDose = "1 Tam Ölçek (5 ml)";
-            else if (halfSpoonCount === 3) friendlyDose = "1.5 Ölçek (7.5 ml)";
-            else if (halfSpoonCount === 4) friendlyDose = "2 Tam Ölçek (10 ml)";
-            else friendlyDose = `Enjektör ile ${roundedMl} ml`;
+            if (halfSpoonCount === 1) {
+                friendlyDose = "Yarım Ölçek (2.5 ml)";
+            } else if (halfSpoonCount === 2) {
+                friendlyDose = "1 Tam Ölçek (5 ml)";
+            } else if (halfSpoonCount % 2 === 0) {
+                friendlyDose = `${halfSpoonCount / 2} Tam Ölçek (${finalSpoonMl} ml)`;
+            } else {
+                friendlyDose = `${(halfSpoonCount - 1) / 2}.5 Ölçek (${finalSpoonMl} ml)`;
+            }
 
             document.getElementById('out-friendly-dose').innerText = friendlyDose;
 
             let verbalGuideText = "";
             if (drug.tType === "daily") {
-                verbalGuideText = `Bu ilacı ${drug.note} olacak şekilde, her seferinde tam ${friendlyDose.toLowerCase()} içiriniz. Kutular bitene veya hekiminizin önerdiği süre dolana kadar kesmeyiniz.`;
+                verbalGuideText = `Bu ilacı ${drug.note} olacak şekilde, her seferinde tam ${friendlyDose.toLowerCase()} içiriniz. ${isCapped ? 'Doz yetişkin maksimum tavan sınırına (limitli) sabitlenmiştir.' : ''} Tedaviyi hekiminizin önerdiği gün tamamlanana kadar (Drugs.com standartlarına göre) kesmeyiniz.`;
             } else {
-                verbalGuideText = `Çocuğun ağrısı veya ateşi olduğunda (${drug.note.includes("tok") ? 'tok karnına' : 'verilebilir'}), en az ${drug.gapHours} saat aralıklarla her seferinde ${friendlyDose.toLowerCase()} içiriniz. Semptomlar geçince tedaviyi sonlandırabilirsiniz.`;
+                verbalGuideText = `Çocuğun ağrısı veya ateşi olduğunda (${drug.note.includes("tok") ? 'tok karnına' : 'verilebilir'}), en az ${drug.gapHours} saat aralıklarla her seferinde ${friendlyDose.toLowerCase()} içiriniz. Semptomlar geçince tedaviyi kesebilirsiniz.`;
             }
             document.getElementById('out-verbal-guide').innerText = verbalGuideText;
         }
@@ -802,12 +901,15 @@
             document.getElementById('out-friendly-dose').innerText = "Vücut Yüzey Alanı (BSA)";
 
             document.getElementById('out-prep-name').innerText = "Hidrasyon & BSA Raporu";
-            document.getElementById('out-verbal-guide').innerText = `Çocuğun bazal günlük fizyolojik sıvı ihtiyacı ${Math.round(dailyFluid)} ml'dir. Damar yolu hızı saatte ${Math.round(hourlyFluid)} ml olarak ayarlanmalıdır. \n(Not: Bu değerler dehidratasyon, yanık veya kusma gibi ek kayıpları İÇERMEZ.)`;
-            document.getElementById('dynamic-warning-text').innerText = "Hesaplanan idame sıvısı sadece normal şartlar altında böbreklerin solüt yükünü atması ve bazal metabolizmanın karşılanması için gereklidir.";
+            document.getElementById('out-verbal-guide').innerText = `Çocuğun bazal günlük fizyolojik sıvı ihtiyacı ${Math.round(dailyFluid)} ml'dir. Damar yolu infüzyon hızı saatte ${Math.round(hourlyFluid)} ml olarak set edilmelidir.`;
+            document.getElementById('dynamic-warning-text').innerText = "İdame sıvı fizyolojiktir. Dehidratasyon, yanık veya kusma gibi ek patolojik kayıpları içermez.";
+            
+            const capWarningDiv = document.getElementById('dose-cap-warning');
+            if (capWarningDiv) capWarningDiv.classList.add('hidden');
         }
 
         // =====================================
-        // REÇETE SEPETİ FONKSİYONLARI (MANDATORY)
+        // REÇETE SEPETİ FONKSİYONLARI
         // =====================================
         function addCurrentToPrescription() {
             const weight = document.getElementById('weight').value;
@@ -821,6 +923,19 @@
                 return;
             }
 
+            const selectedId = document.getElementById('drug-select').value;
+            const drug = DB[currentTab].find(d => d.id === selectedId);
+            if (!drug) return;
+
+            const finalSpoonMl = parseFloat(exactVolume);
+            
+            // Kutu sayısı her zaman 1 ile sınırlandırılmıştır.
+            const boxCount = 1;
+            const spoonQuantityText = getSpoonText(finalSpoonMl);
+
+            // "D:1(BİR)B , S:axb" formatı
+            const shorthand = `D: 1 (BİR) B , S: ${drug.freq || 3} x ${spoonQuantityText}`;
+
             const exists = prescriptionCart.some(item => item.prepName === prepName);
             if(exists) {
                 showToast('<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Bu ilaç formülasyonu zaten reçetede mevcut.');
@@ -833,7 +948,8 @@
                 prepName: prepName,
                 doseValue: doseValue,
                 exactVolume: exactVolume,
-                verbalGuide: verbalGuide
+                verbalGuide: verbalGuide,
+                shorthand: shorthand
             });
 
             updateCartBadge();
@@ -872,12 +988,14 @@
                 
                 itemDiv.innerHTML = `
                     <div class="space-y-1.5 flex-1">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] bg-indigo-100 text-indigo-700 font-extrabold px-2 py-0.5 rounded-sm">Kutu ${index + 1}</span>
+                        <div class="flex items-center flex-wrap gap-2">
+                            <span class="text-[10px] bg-indigo-100 text-indigo-700 font-extrabold px-2 py-0.5 rounded-sm">Rx ${index + 1}</span>
                             <strong class="text-sm text-slate-900 tracking-tight">${item.prepName}</strong>
-                            <span class="text-xs text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">${item.exactVolume} / Doz</span>
                         </div>
-                        <p class="text-xs text-slate-600 leading-relaxed font-medium"><span class="text-indigo-900 font-bold">Kullanım Şekli:</span> ${item.verbalGuide}</p>
+                        <div class="inline-block bg-indigo-50/80 text-indigo-800 border border-indigo-100 text-xs font-mono font-bold px-2.5 py-1 rounded-md mt-1">
+                            <i class="fa-solid fa-prescription-bottle text-[10px] mr-1"></i> ${item.shorthand}
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed font-medium"><span class="text-indigo-950 font-bold">Kullanım Şekli:</span> ${item.verbalGuide}</p>
                     </div>
                     <button onclick="removeFromPrescription('${item.id}')" class="text-slate-300 hover:text-rose-600 p-2 rounded-lg transition-all print:hidden" title="İlacı Çıkar">
                         <i class="fa-solid fa-trash-can"></i>
@@ -905,18 +1023,18 @@
             if(prescriptionCart.length === 0) return;
 
             const weight = document.getElementById('weight').value;
-            let fullText = `T.C. SAĞLIK PORTALI - KLİNİK REÇETE ŞABLONU\n`;
+            let fullText = `T.C. SAĞLIK PORTALI - KLİNİK REÇETE ŞABLONU (Drugs.com Standartlı)\n`;
             fullText += `HASTA AĞIRLIĞI: ${weight} kg\n`;
             fullText += `----------------------------------------\n\n`;
 
             prescriptionCart.forEach((item, index) => {
                 fullText += `Rx ${index + 1}: ${item.prepName}\n`;
-                fullText += `Hacim: ${item.exactVolume} / Doz\n`;
+                fullText += `Klinik Kod: ${item.shorthand}\n`;
                 fullText += `Tarif: ${item.verbalGuide}\n\n`;
             });
 
             fullText += `----------------------------------------\n`;
-            fullText += `*Dijital Karar Destek Sistemi eşliğinde oluşturulmuştur.`;
+            fullText += `*Drugs.com Pediatrik Karar Destek Sistemi eşliğinde oluşturulmuştur.`;
 
             const dummyArea = document.createElement("textarea");
             dummyArea.value = fullText;
@@ -925,7 +1043,7 @@
             document.execCommand('copy');
             document.body.removeChild(dummyArea);
 
-            showToast('<i class="fa-solid fa-copy text-indigo-400"></i> Tüm reçete metni panoya kopyalandı!');
+            showToast('<i class="fa-solid fa-copy text-indigo-400"></i> Tüm reçete metni ve D / S kodları panoya kopyalandı!');
         }
 
         // Gelişmiş Toast Bildirim Modülü (Alert Yasaklı)
@@ -946,5 +1064,3 @@
     </script>
 </body>
 </html>
-
-```
