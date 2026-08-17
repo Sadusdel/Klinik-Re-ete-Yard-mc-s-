@@ -183,15 +183,25 @@
                         <input type="number" id="proph-child-weight" value="20" min="5" max="50" oninput="calcProphylaxis()" class="w-32 p-2 bg-white dark:bg-slate-800 border border-amber-300 rounded-lg font-bold text-lg">
                     </div>
 
+                    <!-- Multiple Options Selection Box (Active when multiple options exist) -->
+                    <div id="proph-select-container" class="hidden mb-5 p-4 bg-amber-50/80 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-800/80 rounded-2xl transition-all">
+                        <label class="block text-xs font-extrabold text-amber-900 dark:text-amber-300 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-amber-600"></i> Birden Fazla İlaç Opsiyonu Mevcut - Lütfen Reçeteye Eklenecek İlacı Seçiniz:
+                        </label>
+                        <select id="proph-option-select" onchange="selectProphOption(this.value)" class="w-full p-3.5 bg-white dark:bg-slate-800 border-2 border-amber-400 dark:border-amber-700 rounded-xl font-extrabold text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+
                     <!-- Result Box -->
                     <div id="proph-result-card" class="p-6 bg-teal-50 dark:bg-teal-950/30 border-2 border-teal-200 dark:border-teal-800/60 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div class="space-y-2">
-                            <span class="text-xs font-extrabold text-teal-700 dark:text-teal-400 uppercase tracking-wider block">Önerilen Profilaksi Protokolü</span>
+                            <span class="text-xs font-extrabold text-teal-700 dark:text-teal-400 uppercase tracking-wider block">Seçilen Profilaksi Protokolü</span>
                             <h3 id="proph-drug-title" class="text-xl font-black text-slate-900 dark:text-white">Amoksisilin (Largopen 1000 mg)</h3>
                             <p id="proph-drug-detail" class="text-sm font-semibold text-teal-900 dark:text-teal-200">2 Tablet (2 g) oral - İşlemden 30-60 dk önce tek doz.</p>
                         </div>
-                        <button onclick="addProphylaxisToCart()" class="w-full md:w-auto px-6 py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-plus-circle"></i> Reçeteye Ekle
+                        <button onclick="addProphylaxisToCart()" class="w-full md:w-auto px-6 py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 shrink-0">
+                            <i class="fa-solid fa-plus-circle"></i> Seçili İlacı Reçeteye Ekle
                         </button>
                     </div>
                 </div>
@@ -581,6 +591,10 @@
         let currentPedResult = null;
         let selectedMronjStage = 2;
 
+        // Prophylaxis dynamic options state
+        let currentProphOptions = [];
+        let selectedProphIndex = 0;
+
         // --- NAVIGATION & THEME ---
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
@@ -638,64 +652,143 @@
 
             const childWeight = parseFloat(document.getElementById('proph-child-weight').value) || 20;
 
-            let title = "";
-            let detail = "";
+            currentProphOptions = [];
 
             if (patient === 'adult') {
                 if (allergy === 'no') {
                     if (route === 'oral') {
-                        title = "Amoksisilin (Largopen 1000 mg Tablet)";
-                        detail = "Doz: 2 Tablet (2 g) oral - İşlemden 30-60 dakika önce TEK DOZ.";
+                        currentProphOptions.push({
+                            title: "Amoksisilin (Largopen 1000 mg Tablet)",
+                            detail: "2 Tablet (2 g) oral - İşlemden 30-60 dakika önce TEK DOZ.",
+                            box: "1 Kutu"
+                        });
                     } else {
-                        title = "Ampisilin (Penbisin 1000 mg Ampul/Flakon)";
-                        detail = "Doz: 2 g (2 ampul) IV veya IM - İşlemden 30-60 dakika önce TEK DOZ.";
+                        currentProphOptions.push({
+                            title: "Ampisilin (Penbisin 1000 mg Flakon)",
+                            detail: "2 g (2 flakon) IV veya IM - İşlemden 30-60 dakika önce TEK DOZ.",
+                            box: "2 Flakon"
+                        });
                     }
-                } else {
+                } else { // Penicillin allergy
                     if (route === 'oral') {
-                        title = "Sefaleksin (Sef 1g) VEYA Azitromisin (Azitro 500mg) VEYA Klindamisin (Cleosin 300mg)";
-                        detail = "Sefaleksin: 2 g (2 tab) ORAL || Azitromisin: 500 mg (1 tab) ORAL || Klindamisin: 600 mg (2 kap) ORAL. İşlemden 30-60 dk önce.";
+                        currentProphOptions.push({
+                            title: "Sefaleksin (Sef 1g Tablet)",
+                            detail: "2 Tablet (2 g) oral - İşlemden 30-60 dakika önce TEK DOZ.",
+                            box: "1 Kutu"
+                        });
+                        currentProphOptions.push({
+                            title: "Azitromisin (Azitro 500 mg Tablet)",
+                            detail: "1 Tablet (500 mg) oral - İşlemden 30-60 dakika önce TEK DOZ.",
+                            box: "1 Kutu"
+                        });
+                        currentProphOptions.push({
+                            title: "Klindamisin (Cleosin 300 mg Kapsül)",
+                            detail: "2 Kapsül (600 mg) oral - İşlemden 30-60 dakika önce TEK DOZ.",
+                            box: "1 Kutu"
+                        });
                     } else {
-                        title = "Sefazolin (Cefozin 1000 mg Ampul)";
-                        detail = "Doz: 1 g IV veya IM - İşlemden 30-60 dakika önce TEK DOZ.";
+                        currentProphOptions.push({
+                            title: "Sefazolin (Cefozin 1000 mg Ampul)",
+                            detail: "1 g IV veya IM - İşlemden 30-60 dakika önce TEK DOZ.",
+                            box: "1 Ampul"
+                        });
                     }
                 }
-            } else { // Child
+            } else { // Pediatric
                 if (allergy === 'no') {
                     if (route === 'oral') {
                         const mg = Math.min(50 * childWeight, 2000);
-                        title = `Amoksisilin Pediatrik Profilaksi (${childWeight} kg)`;
-                        detail = `Doz: ${mg} mg (50 mg/kg - Maksimum 2g) oral - İşlemden 30-60 dakika önce TEK DOZ.`;
+                        currentProphOptions.push({
+                            title: `Amoksisilin Pediatrik Süspansiyon (${childWeight} kg)`,
+                            detail: `${mg} mg (50 mg/kg - Max 2g) oral - İşlemden 30-60 dk önce TEK DOZ.`,
+                            box: "1 Kutu Süspansiyon"
+                        });
                     } else {
                         const mg = Math.min(50 * childWeight, 2000);
-                        title = `Ampisilin Parenteral Profilaksi (${childWeight} kg)`;
-                        detail = `Doz: ${mg} mg (50 mg/kg - Maksimum 2g) IV/IM - İşlemden 30-60 dakika önce TEK DOZ.`;
+                        currentProphOptions.push({
+                            title: `Ampisilin Parenteral Profilaksi (${childWeight} kg)`,
+                            detail: `${mg} mg (50 mg/kg - Max 2g) IV/IM - İşlemden 30-60 dk önce TEK DOZ.`,
+                            box: "1 Flakon"
+                        });
                     }
-                } else {
+                } else { // Penicillin allergy
                     if (route === 'oral') {
                         const sefMg = Math.min(50 * childWeight, 2000);
                         const aziMg = Math.min(15 * childWeight, 500);
-                        title = `Penisilin Alerjik Çocuk Profilaksisi (${childWeight} kg)`;
-                        detail = `Sefaleksin: ${sefMg} mg (50 mg/kg) VEYA Azitromisin: ${aziMg} mg (15 mg/kg) oral - İşlemden 30-60 dk önce.`;
+                        const klinMg = Math.min(20 * childWeight, 600);
+
+                        currentProphOptions.push({
+                            title: `Sefaleksin Pediatrik (${childWeight} kg)`,
+                            detail: `${sefMg} mg (50 mg/kg - Max 2g) oral - İşlemden 30-60 dk önce TEK DOZ.`,
+                            box: "1 Kutu Süspansiyon"
+                        });
+                        currentProphOptions.push({
+                            title: `Azitromisin Pediatrik (${childWeight} kg)`,
+                            detail: `${aziMg} mg (15 mg/kg - Max 500 mg) oral - İşlemden 30-60 dk önce TEK DOZ.`,
+                            box: "1 Kutu Süspansiyon"
+                        });
+                        currentProphOptions.push({
+                            title: `Klindamisin Pediatrik (${childWeight} kg)`,
+                            detail: `${klinMg} mg (20 mg/kg - Max 600 mg) oral - İşlemden 30-60 dk önce TEK DOZ.`,
+                            box: "1 Kutu Süspansiyon"
+                        });
                     } else {
                         const sefazolinMg = Math.min(50 * childWeight, 1000);
-                        title = `Sefazolin Parenteral Profilaksi (${childWeight} kg)`;
-                        detail = `Doz: ${sefazolinMg} mg (50 mg/kg - Max 1g) IV/IM - İşlemden 30-60 dakika önce.`;
+                        currentProphOptions.push({
+                            title: `Sefazolin Parenteral Profilaksi (${childWeight} kg)`,
+                            detail: `${sefazolinMg} mg (50 mg/kg - Max 1g) IV/IM - İşlemden 30-60 dk önce TEK DOZ.`,
+                            box: "1 Flakon"
+                        });
                     }
                 }
             }
 
-            document.getElementById('proph-drug-title').innerText = title;
-            document.getElementById('proph-drug-detail').innerText = detail;
+            selectedProphIndex = 0;
+            renderProphOptions();
+        }
+
+        function renderProphOptions() {
+            const container = document.getElementById('proph-select-container');
+            const selectElem = document.getElementById('proph-option-select');
+
+            if (currentProphOptions.length > 1) {
+                container.classList.remove('hidden');
+                selectElem.innerHTML = '';
+                currentProphOptions.forEach((opt, idx) => {
+                    const optionElem = document.createElement('option');
+                    optionElem.value = idx;
+                    optionElem.innerText = `Opsiyon ${idx + 1}: ${opt.title}`;
+                    selectElem.appendChild(optionElem);
+                });
+                selectElem.value = selectedProphIndex;
+            } else {
+                container.classList.add('hidden');
+            }
+
+            updateProphDisplay();
+        }
+
+        function selectProphOption(index) {
+            selectedProphIndex = parseInt(index) || 0;
+            updateProphDisplay();
+        }
+
+        function updateProphDisplay() {
+            const currentOpt = currentProphOptions[selectedProphIndex] || currentProphOptions[0];
+            if (!currentOpt) return;
+
+            document.getElementById('proph-drug-title').innerText = currentOpt.title;
+            document.getElementById('proph-drug-detail').innerText = currentOpt.detail;
         }
 
         function addProphylaxisToCart() {
-            const title = document.getElementById('proph-drug-title').innerText;
-            const detail = document.getElementById('proph-drug-detail').innerText;
+            const currentOpt = currentProphOptions[selectedProphIndex] || currentProphOptions[0];
+            if (!currentOpt) return;
             
             cart.push({
-                name: "PROFİLAKSİ: " + title,
-                posology: detail,
-                box: "1 Tek Doz Uygulama"
+                name: "PROFİLAKSİ: " + currentOpt.title,
+                posology: currentOpt.detail,
+                box: currentOpt.box || "1 Tek Doz Uygulama"
             });
             updateCartBadge();
             showToast("Profilaksi dozu reçeteye eklendi.");
