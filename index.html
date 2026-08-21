@@ -76,7 +76,6 @@
 
 <body class="text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
 
-    <!-- Navbar -->
     <header class="bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm print-hidden sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800">
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -132,7 +131,6 @@
             </button>
         </div>
 
-        <!-- Dynamic Content Sections -->
         <div id="content-area">
 
             <!-- 1. ANTİBİYOTİK PROFİLAKSİ PROTOKOLÜ -->
@@ -183,7 +181,7 @@
                         <input type="number" id="proph-child-weight" value="20" min="5" max="50" oninput="calcProphylaxis()" class="w-32 p-2 bg-white dark:bg-slate-800 border border-amber-300 rounded-lg font-bold text-lg">
                     </div>
 
-                    <!-- Multiple Options Selection Box (Active when multiple options exist) -->
+                    <!-- Multiple Options Selection Box -->
                     <div id="proph-select-container" class="hidden mb-5 p-4 bg-amber-50/80 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-800/80 rounded-2xl transition-all">
                         <label class="block text-xs font-extrabold text-amber-900 dark:text-amber-300 uppercase tracking-wider mb-2 flex items-center gap-2">
                             <i class="fa-solid fa-list-check text-amber-600"></i> Birden Fazla İlaç Opsiyonu Mevcut - Lütfen Reçeteye Eklenecek İlacı Seçiniz:
@@ -236,7 +234,6 @@
 
             <!-- 2. PEDİATRİK İLAÇ TEDAVİSİ VE REÇETE FORMÜLASYONLARI -->
             <section id="sec-pediatric" class="hidden space-y-6">
-                <!-- Weight Selection Box -->
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div class="w-full md:w-1/3">
                         <label for="ped-weight" class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
@@ -339,14 +336,12 @@
 
             <!-- 3. YETİŞKİN İLAÇ TEDAVİSİ VE KLİNİK ŞABLON REÇETELER -->
             <section id="sec-adult" class="hidden space-y-6">
-                <!-- Ready Clinical Prescriptions (Templates) -->
                 <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
                     <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-4">
                         <i class="fa-solid fa-wand-magic-sparkles text-teal-600"></i> Klinik Şablon Reçeteler (Hazır Reçete Paketleri)
                     </h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        <!-- TME Kit -->
                         <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
                             <div>
                                 <span class="px-2.5 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-bold text-xs rounded-md uppercase tracking-wider block w-fit mb-2">TME Reçetesi</span>
@@ -361,7 +356,6 @@
                             </button>
                         </div>
 
-                        <!-- Pregnancy Kit -->
                         <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
                             <div>
                                 <span class="px-2.5 py-1 bg-pink-100 dark:bg-pink-900/50 text-pink-700 dark:text-pink-300 font-bold text-xs rounded-md uppercase tracking-wider block w-fit mb-2">Gebelik Rutin</span>
@@ -376,7 +370,6 @@
                             </button>
                         </div>
 
-                        <!-- Abscess Kit -->
                         <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
                             <div>
                                 <span class="px-2.5 py-1 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 font-bold text-xs rounded-md uppercase tracking-wider block w-fit mb-2">Akut Apse</span>
@@ -394,12 +387,10 @@
                     </div>
                 </div>
 
-                <!-- Individual Adult Drug Prescribing -->
                 <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
                     <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-4">
                         <i class="fa-solid fa-pills text-teal-600"></i> Yetişkin İlaç Kataloğu
                     </h2>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="adult-drug-grid">
                         <!-- Populated by JS -->
                     </div>
@@ -438,7 +429,6 @@
                         </button>
                     </div>
 
-                    <!-- Stage Detail Display Card -->
                     <div class="p-6 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-4">
                         <div>
                             <span id="mronj-stage-badge" class="px-3 py-1 bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 font-extrabold text-xs rounded-md">ADIM 1 TEDAVİ PROTOKOLÜ</span>
@@ -449,7 +439,6 @@
                             Rutin ağız bakımı ve yıkama protokolü başlanmalıdır. Pürülan eksuda ve akut enfeksiyon bulguları varlığında uygulanır. Hemen PENTE protokolü için Dahiliye/Aile Hekimine yönlendiriniz.
                         </p>
 
-                        <!-- MRONJ Antibiotic Selector -->
                         <div id="mronj-rx-box" class="pt-4 border-t border-slate-200 dark:border-slate-700 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                             <div class="w-full md:w-auto flex-1">
                                 <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Seçilecek Tedavi Rejimi</label>
@@ -472,7 +461,6 @@
             <section id="sec-cart" class="hidden">
                 <div class="prescription-paper p-6 sm:p-10 rounded-2xl border-2 border-slate-200 dark:border-slate-700 min-h-[500px]">
                     
-                    <!-- Action Bar -->
                     <div class="flex justify-between items-center mb-6 print-hidden">
                         <div>
                             <h2 class="font-black text-2xl text-slate-900 dark:text-white flex items-center gap-3">
@@ -490,12 +478,10 @@
                         </div>
                     </div>
 
-                    <!-- Prescription Main Title -->
                     <div class="text-center mb-6 pb-4 border-b-2 border-slate-800 dark:border-slate-200">
                         <h2 class="text-3xl font-black tracking-widest text-slate-900 dark:text-white uppercase">REÇETE</h2>
                     </div>
 
-                    <!-- Hasta Bilgileri Alanı -->
                     <div class="bg-slate-50 dark:bg-slate-800/50 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 mb-6 print:border-b print:border-slate-300 print:bg-transparent print:p-2">
                         <h3 class="text-xs font-extrabold text-teal-700 dark:text-teal-400 uppercase tracking-wider mb-3 flex items-center gap-2 print-hidden">
                             <i class="fa-solid fa-user-injured"></i> Hasta Bilgileri
@@ -532,7 +518,6 @@
                         <!-- Dynamic items -->
                     </div>
 
-                    <!-- Print Footer Sign block -->
                     <div class="print-only mt-20 pt-6 border-t border-slate-400">
                         <div class="flex justify-between items-end text-xs">
                             <div>
@@ -550,6 +535,28 @@
 
         </div>
     </main>
+
+    <!-- İlaç Değiştirme Modülü -->
+    <div id="change-drug-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm print-hidden">
+        <div class="bg-white dark:bg-slate-900 w-11/12 max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[80vh] overflow-hidden">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-teal-600"></i> Reçetedeki İlacı Değiştir
+                </h3>
+                <button onclick="closeChangeModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <input type="text" id="drug-search-input" onkeyup="searchDrug()" placeholder="Sistemdeki ilaçlar arasında arayın..." class="w-full p-3 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none">
+            </div>
+            <div class="overflow-y-auto flex-1 p-0">
+                <ul id="drug-search-results" class="m-0 p-0 list-none">
+                    <!-- Arama sonuçları buraya gelecek -->
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
@@ -591,9 +598,10 @@
         let currentPedResult = null;
         let selectedMronjStage = 2;
 
-        // Prophylaxis dynamic options state
         let currentProphOptions = [];
         let selectedProphIndex = 0;
+
+        let currentChangeIndex = -1; // İlaç değiştirme işlemi için
 
         // --- NAVIGATION & THEME ---
         function toggleTheme() {
@@ -637,6 +645,7 @@
             }, 2500);
         }
 
+        // --- STREAMING_CHUNK:Prophylaxis Actions... ---
         // --- 1. PROPHYLAXIS MODULE ---
         function calcProphylaxis() {
             const patient = document.getElementById('proph-patient').value;
@@ -669,7 +678,7 @@
                             box: "2 Flakon"
                         });
                     }
-                } else { // Penicillin allergy
+                } else {
                     if (route === 'oral') {
                         currentProphOptions.push({
                             title: "Sefaleksin (Sef 1g Tablet)",
@@ -694,7 +703,7 @@
                         });
                     }
                 }
-            } else { // Pediatric
+            } else { 
                 if (allergy === 'no') {
                     if (route === 'oral') {
                         const mg = Math.min(50 * childWeight, 2000);
@@ -711,7 +720,7 @@
                             box: "1 Flakon"
                         });
                     }
-                } else { // Penicillin allergy
+                } else {
                     if (route === 'oral') {
                         const sefMg = Math.min(50 * childWeight, 2000);
                         const aziMg = Math.min(15 * childWeight, 500);
@@ -794,6 +803,7 @@
             showToast("Profilaksi dozu reçeteye eklendi.");
         }
 
+        // --- STREAMING_CHUNK:Pediatric Actions... ---
         // --- 2. PEDIATRIC MODULE ---
         function setPedWeight(w) {
             document.getElementById('ped-weight').value = w;
@@ -864,7 +874,6 @@
             const mlPerDose = (mgPerDose / drug.conc_mg) * drug.conc_ml;
             const scale = mlPerDose / 5;
 
-            // Update UI
             document.getElementById('ped-ref-dose').innerText = `${targetBaseDose} mg/kg/${drug.doseType === 'daily' ? 'gün' : 'doz'}`;
             document.getElementById('ped-ref-freq').innerText = `Günde ${drug.freq} kez`;
             document.getElementById('ped-ref-conc').innerText = `${drug.conc_mg} mg / ${drug.conc_ml} ml`;
@@ -898,6 +907,7 @@
             showToast("Pediatrik reçete sepetinize eklendi.");
         }
 
+        // --- STREAMING_CHUNK:Adult & MRONJ Actions... ---
         // --- 3. ADULT MODULE ---
         function renderAdultCatalog() {
             const grid = document.getElementById('adult-drug-grid');
@@ -1024,7 +1034,8 @@
             showToast(`Adım ${selectedMronjStage} Reçete Protokolü Eklendi.`);
         }
 
-        // --- 5. CART MODULE ---
+        // --- STREAMING_CHUNK:Cart and Search Actions... ---
+        // --- 5. CART & SEARCH MODULE ---
         function updateCartBadge() {
             const badge = document.getElementById('cart-badge');
             badge.innerText = cart.length;
@@ -1051,6 +1062,97 @@
             renderCart();
         }
 
+        // Yeni Eklenen: İlaç Değiştirme ve Arama Fonksiyonları
+        function openChangeModal(index) {
+            currentChangeIndex = index;
+            document.getElementById('change-drug-modal').classList.remove('hidden');
+            document.getElementById('drug-search-input').value = '';
+            searchDrug(); 
+            // Input'a odaklan (Kullanıcı deneyimi için)
+            setTimeout(() => document.getElementById('drug-search-input').focus(), 100);
+        }
+
+        function closeChangeModal() {
+            document.getElementById('change-drug-modal').classList.add('hidden');
+            currentChangeIndex = -1;
+        }
+
+        function searchDrug() {
+            const query = document.getElementById('drug-search-input').value.toLowerCase();
+            const resultsContainer = document.getElementById('drug-search-results');
+            resultsContainer.innerHTML = '';
+            
+            // Tüm ilaç havuzunu oluştur (Eğer daha önce oluşturulmadıysa)
+            if (!window.allDrugsPool) {
+                window.allDrugsPool = [];
+                // Yetişkin İlaçları
+                adultCatalog.forEach(d => window.allDrugsPool.push({name: d.name, posology: d.posology, box: d.box}));
+                // Pediatrik İlaçlar
+                ['antibiotic', 'analgesic'].forEach(cat => {
+                    pedDb[cat].forEach(d => window.allDrugsPool.push({name: d.label, posology: "S: Hekim tarafından belirlenecektir (Doz ayarı gereklidir)", box: "1 Kutu"}));
+                });
+                // Diğer spesifik (MRONJ/Profilaksi) İlaçlar
+                window.allDrugsPool.push(
+                    { name: "Sulcid 1 gr Ampül", posology: "S: 2 x 1 (İ.M.)", box: "2 Kutu" },
+                    { name: "Monodoks 100 mg Kapsül", posology: "S: 2 x 1", box: "2 Kutu" },
+                    { name: "Trentilin Retard 400 mg Tablet", posology: "S: 2 x 1", box: "1 Kutu" },
+                    { name: "Evicap 400 IU Kapsül", posology: "S: 1 x 1", box: "1 Kutu" },
+                    { name: "Azitromisin (Azitro 500 mg Tablet)", posology: "S: 1 Tablet oral TEK DOZ", box: "1 Kutu" },
+                    { name: "Klindamisin (Cleosin 300 mg Kapsül)", posology: "S: 2 Kapsül oral TEK DOZ", box: "1 Kutu" },
+                    { name: "Sefazolin (Cefozin 1000 mg Ampul)", posology: "S: 1 g IV veya IM TEK DOZ", box: "1 Ampul" },
+                    { name: "Ampisilin (Penbisin 1000 mg Flakon)", posology: "S: 2 g IV veya IM TEK DOZ", box: "2 Flakon" }
+                );
+                
+                // İsim bazında duplicate olanları temizle
+                const seen = new Set();
+                window.allDrugsPool = window.allDrugsPool.filter(d => {
+                    if (seen.has(d.name)) return false;
+                    seen.add(d.name);
+                    return true;
+                });
+            }
+            
+            // Filtreleme
+            const filtered = window.allDrugsPool.filter(d => d.name.toLowerCase().includes(query) || d.posology.toLowerCase().includes(query));
+            
+            // Listeyi HTML'e basma
+            filtered.forEach(drug => {
+                const li = document.createElement('li');
+                li.className = 'p-3 hover:bg-teal-50 dark:hover:bg-teal-900/40 cursor-pointer border-b border-slate-100 dark:border-slate-800 transition-colors flex justify-between items-center group';
+                li.innerHTML = `
+                    <div class="pr-2">
+                        <div class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">${drug.name}</div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">${drug.posology}</div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right-arrow-left text-teal-600/50 group-hover:text-teal-600 text-sm"></i>
+                `;
+                li.onclick = () => {
+                    if(currentChangeIndex > -1) {
+                        cart[currentChangeIndex] = {
+                            name: drug.name,
+                            posology: drug.posology,
+                            box: drug.box
+                        };
+                        closeChangeModal();
+                        renderCart();
+                        showToast("Reçetedeki ilaç başarıyla değiştirildi.");
+                    }
+                };
+                resultsContainer.appendChild(li);
+            });
+            
+            if (filtered.length === 0) {
+                resultsContainer.innerHTML = '<li class="p-5 text-center text-sm font-semibold text-slate-500">Aranan kriterde ilaç bulunamadı.</li>';
+            }
+        }
+
+        // --- STREAMING_CHUNK:Cart Render Logic... ---
+        function updateCartItem(index, field, value) {
+            if (cart[index]) {
+                cart[index][field] = value;
+            }
+        }
+
         function renderCart() {
             const list = document.getElementById('cart-list');
             const empty = document.getElementById('cart-empty');
@@ -1067,22 +1169,36 @@
             empty.classList.add('hidden');
 
             cart.forEach((item, index) => {
+                const displayPosology = item.posology.replace(/^S:\s*/i, '');
                 const row = document.createElement('div');
-                row.className = "flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-700 pb-4 mb-2 print:p-0 print:border-none print:mb-4";
+                row.className = "flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-700 pb-4 mb-2 print:p-0 print:border-none print:mb-4 group";
+                
+                // Değiştir (Refresh) ve Sil butonları eklendi
                 row.innerHTML = `
-                    <div class="flex gap-4 items-start w-full">
+                    <div class="flex gap-4 items-start w-full min-w-0">
                         <div class="font-black text-lg text-slate-400 print:text-black mt-1">${index + 1}.</div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start mb-1">
-                                <h4 class="font-black text-slate-900 dark:text-white text-base print:text-black">${item.name}</h4>
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs rounded border border-slate-300 dark:border-slate-600 print:border-none print:bg-transparent print:p-0 print:text-black">D kutu (${item.box})</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-1">
+                                <h4 class="font-black text-slate-900 dark:text-white text-base print:text-black break-words">${item.name}</h4>
+                                <div class="flex items-center gap-1 shrink-0 bg-slate-100/50 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 px-2 py-1 rounded-lg border border-slate-300 dark:border-slate-600 transition-colors print:border-none print:bg-transparent print:p-0">
+                                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 print:text-black">D:</span>
+                                    <input type="text" value="${item.box}" onchange="updateCartItem(${index}, 'box', this.value)" class="w-20 bg-transparent text-slate-700 dark:text-slate-200 font-bold text-xs focus:outline-none print:text-black" placeholder="Kutu/Adet" title="Kutu sayısını düzenle">
+                                </div>
                             </div>
-                            <p class="font-semibold text-teal-700 dark:text-teal-400 text-sm print:text-black ml-2">${item.posology}</p>
+                            <div class="flex items-start gap-1 w-full mt-1">
+                                <span class="text-sm font-bold text-teal-700 dark:text-teal-400 mt-1 print:text-black">S:</span>
+                                <input type="text" value="${displayPosology}" onchange="updateCartItem(${index}, 'posology', 'S: ' + this.value)" class="flex-1 bg-transparent hover:bg-teal-50 dark:hover:bg-teal-900/30 px-2 py-1 text-teal-700 dark:text-teal-300 font-semibold text-sm rounded-lg border border-transparent hover:border-teal-200 dark:hover:border-teal-800 focus:bg-white dark:focus:bg-slate-900 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-colors print:border-none print:text-black w-full" placeholder="Doz ve kullanım şekli" title="Doz bilgisini düzenle">
+                            </div>
                         </div>
                     </div>
-                    <button onclick="removeCartItem(${index})" class="print-hidden ml-4 p-2 text-slate-400 hover:text-red-500 transition-colors">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
+                    <div class="print-hidden flex flex-col sm:flex-row items-center gap-1 ml-4 border-l border-slate-200 dark:border-slate-700 pl-3 shrink-0 opacity-100 sm:opacity-50 sm:group-hover:opacity-100 transition-opacity">
+                        <button onclick="openChangeModal(${index})" class="p-2 text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors bg-slate-50 hover:bg-teal-50 dark:bg-slate-800 dark:hover:bg-teal-900/50 rounded-lg" title="İlacı Değiştir">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
+                        <button onclick="removeCartItem(${index})" class="p-2 text-slate-400 hover:text-red-500 transition-colors bg-slate-50 hover:bg-red-50 dark:bg-slate-800 dark:hover:bg-red-900/50 rounded-lg" title="İlacı Kaldır">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
                 `;
                 list.appendChild(row);
             });
