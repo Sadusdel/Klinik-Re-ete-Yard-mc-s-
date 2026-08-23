@@ -84,7 +84,7 @@
                 </div>
                 <div>
                     <h1 class="text-base sm:text-lg font-extrabold tracking-tight">Diş Hekimliği Klinik Reçete Portalı</h1>
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Profilaksi, Pediatri, Yetişkin & MRONJ Karar Destek Rehberi</p>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Profilaksi, Pediatri, Yetişkin, Sistemik Kontrendikasyon & MRONJ Rehberi</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -92,7 +92,7 @@
                     <i class="fa-solid fa-sun hidden dark:inline"></i>
                     <i class="fa-solid fa-moon inline dark:hidden"></i>
                 </button>
-                <button onclick="switchTab('cart')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-sm">
+                <button onclick="switchTab('cart')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-sm relative">
                     <i class="fa-solid fa-file-medical"></i> <span class="hidden sm:inline">Reçete Sepeti</span>
                     <span id="cart-badge" class="px-2 py-0.5 text-xs bg-white text-emerald-800 rounded-full font-black">0</span>
                 </button>
@@ -107,9 +107,12 @@
             <div class="flex items-center gap-3">
                 <i class="fa-solid fa-shield-halved text-teal-600 dark:text-teal-400 text-xl"></i>
                 <p class="text-xs sm:text-sm text-teal-900 dark:text-teal-200 font-medium leading-relaxed">
-                    Bu sistem güncel Diş Hekimliği Reçete ve Profilaksi Klinik Protokollerine dayanır. Doz ve preparat seçimleri hastanın klinik tablosuna göre hekim sorumluluğundadır.
+                    Sistemik durumlar panelinden hastanın rahatsızlıklarını tikleyerek kontrendike ilaçların reçeteye eklenmesini engelleyebilir ve akıllı alternatif önerileri alabilirsiniz.
                 </p>
             </div>
+            <button onclick="openSystemicModal()" class="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-notes-medical"></i> Sistemik Durumlar (<span id="active-cond-count">0</span>)
+            </button>
         </div>
 
         <!-- Main Navigation Tabs -->
@@ -536,6 +539,80 @@
         </div>
     </main>
 
+    <!-- Sistemik Durumlar Modal (Kontrendikasyon Kontrol Merkezi) -->
+    <div id="systemic-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm print-hidden">
+        <div class="bg-white dark:bg-slate-900 w-11/12 max-w-2xl rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-teal-100 dark:bg-teal-900/50 rounded-xl text-teal-600 dark:text-teal-400">
+                        <i class="fa-solid fa-notes-medical text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-black text-base text-slate-900 dark:text-white">Hasta Sistemik Durumlar & Kontrendikasyon Paneli</h3>
+                        <p class="text-xs text-slate-500">Tiklenen durumlara göre kontrendike ilaçlar doğrudan engellenir ve alternatifleri reçeteye eklenir.</p>
+                    </div>
+                </div>
+                <button onclick="closeSystemicModal()" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="systemic-checkboxes-grid">
+                    <!-- JS ile dinamik doldurulacak -->
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center">
+                <span id="active-cond-summary" class="text-xs font-bold text-teal-700 dark:text-teal-400">Aktif Durum: 0 seçildi</span>
+                <button onclick="closeSystemicModal()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow transition-all">
+                    Tamam / Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kontrendikasyon Uyarısı / Alternatif Öneri Modalı -->
+    <div id="contraindication-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm print-hidden">
+        <div class="bg-white dark:bg-slate-900 w-11/12 max-w-md rounded-3xl shadow-2xl flex flex-col overflow-hidden border-2 border-rose-500/50">
+            <div class="p-5 bg-rose-50 dark:bg-rose-950/40 border-b border-rose-200 dark:border-rose-900 flex items-center gap-3">
+                <div class="p-3 bg-rose-500 text-white rounded-2xl shadow-lg">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-black text-base text-rose-900 dark:text-rose-200">Kritik Kontrendikasyon Uyarısı!</h3>
+                    <p class="text-xs text-rose-700 dark:text-rose-400 font-medium">Seçilen ilaç hastanın sistemik durumuyla uyuşmuyor.</p>
+                </div>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Engellenen İlaç</span>
+                    <h4 id="warn-drug-name" class="font-black text-sm text-slate-900 dark:text-white">--</h4>
+                </div>
+
+                <div class="p-3.5 bg-rose-50/50 dark:bg-rose-950/20 rounded-xl border border-rose-200 dark:bg-rose-900/30">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 block mb-1">Tespit Edilen Sistemik Risk / Sebep</span>
+                    <p id="warn-reason" class="text-xs font-bold text-rose-900 dark:text-rose-200">--</p>
+                </div>
+
+                <div class="p-3.5 bg-teal-50 dark:bg-teal-950/30 rounded-xl border border-teal-200 dark:border-teal-800">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 block mb-1">Doğrudan Reçeteye Eklenecek "Yerine Önerilen" Alternatif</span>
+                    <p id="warn-alternative" class="text-xs font-bold text-teal-900 dark:text-teal-200">--</p>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex gap-2 justify-end">
+                <button onclick="closeContraindicationModal()" class="px-4 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all">
+                    Vazgeç (Ekleme)
+                </button>
+                <button onclick="applyAlternativeDirectly()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Alternatifi Doğrudan Reçeteye Ekle
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- İlaç Değiştirme Modülü -->
     <div id="change-drug-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm print-hidden">
         <div class="bg-white dark:bg-slate-900 w-11/12 max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[80vh] overflow-hidden">
@@ -562,7 +639,155 @@
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
-        // --- DATA STORE ---
+        // --- DATA STORE & SYSTEMIC CONDITIONS DATABASE ---
+        const systemicConditionsList = [
+            { id: "penicillin_allergy", label: "Penisilin Alerjisi (Anafilaksi Öyküsü)", group: "penicillin" },
+            { id: "liver_dysfunction", label: "Karaciğer Yetmezliği / Disfonksiyonu", group: "liver" },
+            { id: "mono_disease", label: "Enfeksiyöz Mononükleoz (Öpücük Hastalığı)", group: "penicillin" },
+            { id: "cephalosporin_allergy", label: "Sefalosporin Alerjisi", group: "cephalosporin" },
+            { id: "cardiac_qt", label: "Kardiyovasküler Sorunlar / Uzun QT / Ritim Bozukluğu", group: "macrolide" },
+            { id: "statin_use", label: "Statin Grubu İlaç Kullanımı (Kolesterol)", group: "macrolide" },
+            { id: "gi_colitis", label: "GİS / Clostridium difficile / İBH (Crohn / ÜK)", group: "lincosamide" },
+            { id: "pregnancy_lactation", label: "Gebelik / Emzirme Dönemi", group: "tetracycline" },
+            { id: "child_under_8", label: "8 Yaşından Küçük Çocuk", group: "tetracycline" },
+            { id: "alcohol_use", label: "Düzenli Alkol Kullanımı / Disülfiram Riski", group: "nitroimidazol" },
+            { id: "neurological_disorder", label: "Aktif Merkezi Sinir Sistemi / Nörolojik Hastalık", group: "nitroimidazol" },
+            { id: "nsaid_ulcer", label: "Aktif Peptik Ülser / Mide-Bağırsak Kanaması", group: "nsaid" },
+            { id: "nsaid_cardiac", label: "Şiddetli Kalp Yetmezliği / CABG Öyküsü", group: "nsaid" },
+            { id: "renal_failure", label: "Şiddetli Böbrek Yetmezliği", group: "nsaid" },
+            { id: "nsaid_asthma", label: "Aspirin / NSAİİ Bağlı Astım / Ürtiker Atağı", group: "nsaid" },
+            { id: "pregnancy_3trimester", label: "Gebelik 3. Trimester (Son 3 Ay)", group: "nsaid" },
+            { id: "chronic_alcoholism", label: "Kronik Alkolizm / Parasetamol Risk", group: "paracetamol" },
+            { id: "chlorzoxazone_liver", label: "Klorzoksazon / Karaciğer Riskli Kas Gevşetici", group: "muscle_relaxant" },
+            { id: "brain_bleed", label: "Yakın Zaman Beyin / Retina Kanaması", group: "mronj_pente" },
+            { id: "anticoagulant_use", label: "Antikoagülan (Kan Sulandırıcı) Kullanımı", group: "mronj_vit_e" },
+            { id: "child_under_12", label: "12 Yaş Altı Çocuk (Klorheksidin Yutma Riski)", group: "chlorhexidine" }
+        ];
+
+        // İlaç grupları, kontrendikasyon kuralları ve "yerine önerilen" alternatif reçete verileri
+        const contraindicationRules = {
+            "penicillin": {
+                nameContains: ["amoksisilin", "largopen", "ampisilin", "penbisin", "augmentin", "klamoks", "sulcid"],
+                conditions: ["penicillin_allergy", "liver_dysfunction", "mono_disease"],
+                reason: "Hastada Penisilin grubu için sistemik kontrendikasyon (Alerji / Karaciğer / Mononükleoz) mevcut.",
+                alternativeObj: {
+                    name: "Azitromisin (Azitro 500 mg Tablet) (Yerine Önerilen)",
+                    posology: "S: 1 x 1 (İlk gün 2 tablet, devamı günde 1 tablet - Tok)",
+                    box: "1 Kutu"
+                }
+            },
+            "cephalosporin": {
+                nameContains: ["sefaleksin", "sef", "maksipor", "sefazolin", "cefozin"],
+                conditions: ["cephalosporin_allergy", "penicillin_allergy"],
+                reason: "Şiddetli penisilin veya sefalosporin alerjisi çapraz reaksiyon riski oluşturur.",
+                alternativeObj: {
+                    name: "Klindamisin (Cleosin 300 mg Kapsül) (Yerine Önerilen)",
+                    posology: "S: 3 x 1 (8 saatte bir bol su ile dik pozisyonda)",
+                    box: "1 Kutu"
+                }
+            },
+            "macrolide": {
+                nameContains: ["azitromisin", "azitro", "klaritromisin", "macrol"],
+                conditions: ["cardiac_qt", "statin_use", "liver_dysfunction"],
+                reason: "Kardiyak (Uzun QT), ilaç etkileşimi (Statin) veya karaciğer yetmezliği riski.",
+                alternativeObj: {
+                    name: "Klindamisin (Cleosin 300 mg Kapsül) (Yerine Önerilen)",
+                    posology: "S: 3 x 1 (8 saatte bir bol su ile dik pozisyonda)",
+                    box: "1 Kutu"
+                }
+            },
+            "lincosamide": {
+                nameContains: ["klindamisin", "cleosin"],
+                conditions: ["gi_colitis"],
+                reason: "Geçmişte Clostridium difficile / psödomembranöz kolit veya İBH öyküsü.",
+                alternativeObj: {
+                    name: "Azitromisin (Azitro 500 mg Tablet) (Yerine Önerilen)",
+                    posology: "S: 1 x 1 (Günde 1 kez oral)",
+                    box: "1 Kutu"
+                }
+            },
+            "tetracycline": {
+                nameContains: ["doksisiklin", "monodoks"],
+                conditions: ["pregnancy_lactation", "child_under_8"],
+                reason: "Gebelik/Emzirme dönemi veya 8 yaş altı çocuklarda diş renklenmesi ve teratojenik risk.",
+                alternativeObj: {
+                    name: "Amoksisilin (Largopen 1000 mg Tablet) (Yerine Önerilen)",
+                    posology: "S: 2 x 1 (12 saatte bir)",
+                    box: "1 Kutu"
+                }
+            },
+            "nitroimidazol": {
+                nameContains: ["metronidazol", "flagyl"],
+                conditions: ["alcohol_use", "neurological_disorder", "pregnancy_lactation"],
+                reason: "Alkol kullanımı (disülfiram reaksiyonu), nörolojik hastalık veya gebelik riski.",
+                alternativeObj: {
+                    name: "Klindamisin (Cleosin 300 mg Kapsül) (Yerine Önerilen)",
+                    posology: "S: 3 x 1 (8 saatte bir)",
+                    box: "1 Kutu"
+                }
+            },
+            "nsaid": {
+                nameContains: ["ibuprofen", "dolven", "ibu-fort", "deksketoprofen", "arveles", "naproksen", "apranax", "tenoksikam", "oksamen"],
+                conditions: ["nsaid_ulcer", "nsaid_cardiac", "renal_failure", "nsaid_asthma", "pregnancy_3trimester"],
+                reason: "GİS ülser/kanama, şiddetli kalp/böbrek yetmezliği, NSAİİ astım atağı veya 3. trimester gebelik.",
+                alternativeObj: {
+                    name: "Parol 500 mg Tablet (Yerine Önerilen Parasetamol)",
+                    posology: "S: 3 x 1 (Ağrı durumunda düzenli)",
+                    box: "1 Kutu"
+                }
+            },
+            "paracetamol": {
+                nameContains: ["parasetamol", "parol", "calpol"],
+                conditions: ["liver_dysfunction", "chronic_alcoholism"],
+                reason: "Şiddetli karaciğer yetmezliği veya kronik alkolizm (hepatotoksisite riski).",
+                alternativeObj: {
+                    name: "Kısa süreli düşük doz İbuprofen (Dolven) (Yerine Önerilen)",
+                    posology: "S: 3 x 1 (Tok karnına kısa süreli)",
+                    box: "1 Kutu"
+                }
+            },
+            "muscle_relaxant": {
+                nameContains: ["parafon"],
+                conditions: ["liver_dysfunction", "chlorzoxazone_liver"],
+                reason: "İçeriğindeki klorzoksazon nedeniyle karaciğer fonksiyon bozukluğunda kontrendikedir.",
+                alternativeObj: {
+                    name: "Oksamen 20 mg Tablet (Tek Başına Analjezik)",
+                    posology: "S: 1 x 1 (Tok karnına)",
+                    box: "1 Kutu"
+                }
+            },
+            "mronj_pente": {
+                nameContains: ["trentilin", "trentil"],
+                conditions: ["brain_bleed"],
+                reason: "Yakın zamanda geçirilmiş beyin veya retina kanaması riski.",
+                alternativeObj: {
+                    name: "Evicap 400 IU Kapsül (Tek Başına Destek)",
+                    posology: "S: 1 x 1",
+                    box: "1 Kutu"
+                }
+            },
+            "mronj_vit_e": {
+                nameContains: ["evicap", "e vitamini"],
+                conditions: ["anticoagulant_use"],
+                reason: "Antikoagülan (kan sulandırıcı) ilaçlarla kanama riskini artırır.",
+                alternativeObj: {
+                    name: "Rutin Antiseptik Gargara ve İzlem",
+                    posology: "S: 3 x 1 Çalkala ve tükür",
+                    box: "1 Şişe"
+                }
+            },
+            "chlorhexidine": {
+                nameContains: ["andorex", "klorheksidin"],
+                conditions: ["child_under_12"],
+                reason: "12 yaş altı çocuklarda yutma riski nedeniyle rutin önerilmez.",
+                alternativeObj: {
+                    name: "Ilık Tuzlu Su Gargarası (Yerine Önerilen)",
+                    posology: "S: Günde 3-4 kez ılık tuzlu su ile çalkalama",
+                    box: "Ev Uygulaması"
+                }
+            }
+        };
+
         const pedDb = {
             antibiotic: [
                 { id: "aug_200", label: "Augmentin 200/28.5 mg Oral Süspansiyon", baseDose: 40, doseType: "daily", conc_mg: 200, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "Amoksisilin bileşenine göredir." },
@@ -595,13 +820,15 @@
         ];
 
         let cart = [];
+        let activeSystemicConditions = {}; // { conditionId: true/false }
         let currentPedResult = null;
         let selectedMronjStage = 2;
-
         let currentProphOptions = [];
         let selectedProphIndex = 0;
+        let currentChangeIndex = -1;
 
-        let currentChangeIndex = -1; // İlaç değiştirme işlemi için
+        // Geçici kontrendikasyon tetikleme verisi
+        let pendingContraDrug = null;
 
         // --- NAVIGATION & THEME ---
         function toggleTheme() {
@@ -634,7 +861,7 @@
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            const bg = type === 'success' ? 'bg-teal-700' : 'bg-slate-800';
+            const bg = type === 'success' ? 'bg-teal-700' : (type === 'warning' ? 'bg-amber-600' : 'bg-slate-800');
             toast.className = `${bg} text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm font-bold toast-enter pointer-events-auto`;
             toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ${msg}`;
             container.appendChild(toast);
@@ -645,7 +872,114 @@
             }, 2500);
         }
 
-        // --- STREAMING_CHUNK:Prophylaxis Actions... ---
+        // --- STREAMING_CHUNK:Systemic Conditions & Contraindication Management... ---
+        function openSystemicModal() {
+            document.getElementById('systemic-modal').classList.remove('hidden');
+            renderSystemicCheckboxes();
+        }
+
+        function closeSystemicModal() {
+            document.getElementById('systemic-modal').classList.add('hidden');
+            updateSystemicCountBadge();
+        }
+
+        function renderSystemicCheckboxes() {
+            const grid = document.getElementById('systemic-checkboxes-grid');
+            grid.innerHTML = '';
+
+            systemicConditionsList.forEach(cond => {
+                const isChecked = activeSystemicConditions[cond.id] ? 'checked' : '';
+                const labelDiv = document.createElement('label');
+                labelDiv.className = `flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${isChecked ? 'bg-teal-50 dark:bg-teal-950/40 border-teal-300 dark:border-teal-800 font-bold' : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:bg-slate-100'}`;
+                labelDiv.innerHTML = `
+                    <input type="checkbox" value="${cond.id}" ${isChecked} onchange="toggleSystemicCondition('${cond.id}', this.checked)" class="w-4 h-4 text-teal-600 rounded focus:ring-teal-500 accent-teal-600">
+                    <span class="text-xs text-slate-800 dark:text-slate-200">${cond.label}</span>
+                `;
+                grid.appendChild(labelDiv);
+            });
+            updateSystemicCountBadge();
+        }
+
+        function toggleSystemicCondition(id, isChecked) {
+            if (isChecked) {
+                activeSystemicConditions[id] = true;
+            } else {
+                delete activeSystemicConditions[id];
+            }
+            renderSystemicCheckboxes();
+        }
+
+        function updateSystemicCountBadge() {
+            const count = Object.keys(activeSystemicConditions).length;
+            document.getElementById('active-cond-count').innerText = count;
+            document.getElementById('active-cond-summary').innerText = `Aktif Sistemik Durum: ${count} seçildi`;
+        }
+
+        // --- CONTRAINDICATION & AUTOMATIC REPLACEMENT ENGINE ---
+        function checkDrugContraindication(drugName) {
+            const nameLower = drugName.toLowerCase();
+            
+            for (const groupKey in contraindicationRules) {
+                const rule = contraindicationRules[groupKey];
+                const matchesDrug = rule.nameContains.some(kw => nameLower.includes(kw));
+                
+                if (matchesDrug) {
+                    const triggeredCond = rule.conditions.find(cId => activeSystemicConditions[cId]);
+                    if (triggeredCond) {
+                        return {
+                            hasError: true,
+                            reason: rule.reason,
+                            alternativeObj: rule.alternativeObj
+                        };
+                    }
+                }
+            }
+            return { hasError: false };
+        }
+
+        function safeAddDrugToCart(drugObj) {
+            const check = checkDrugContraindication(drugObj.name);
+            if (check.hasError) {
+                // Söz konusu ilaç kontrendike ise reçete önizlemesine EKLENMEZ, modal uyarısı açılır.
+                pendingContraDrug = drugObj;
+                document.getElementById('warn-drug-name').innerText = drugObj.name;
+                document.getElementById('warn-reason').innerText = check.reason;
+                document.getElementById('warn-alternative').innerText = `${check.alternativeObj.name} (${check.alternativeObj.posology})`;
+                // Alternatif objesini geçici sakla
+                pendingContraDrug.altReplacement = check.alternativeObj;
+
+                document.getElementById('contraindication-modal').classList.remove('hidden');
+                return false;
+            } else {
+                cart.push(drugObj);
+                updateCartBadge();
+                showToast(`${drugObj.name} reçeteye eklendi.`);
+                return true;
+            }
+        }
+
+        function closeContraindicationModal() {
+            document.getElementById('contraindication-modal').classList.add('hidden');
+            pendingContraDrug = null;
+        }
+
+        function applyAlternativeDirectly() {
+            if (!pendingContraDrug || !pendingContraDrug.altReplacement) return;
+            
+            // "Alternatifi doğrudan reçeteye ekle" seçildiğinde, söz konusu ilaç eklenmez, yerine önerilen alternatif eklenir.
+            const alt = pendingContraDrug.altReplacement;
+            cart.push({
+                name: alt.name,
+                posology: alt.posology,
+                box: alt.box
+            });
+            
+            updateCartBadge();
+            showToast("Kontrendike ilaç engellendi; 'yerine önerilen' alternatif reçeteye doğrudan eklendi.", "warning");
+            closeContraindicationModal();
+        }
+
+        // --- STREAMING_CHUNK:Prophylaxis Logic... ---
         // --- 1. PROPHYLAXIS MODULE ---
         function calcProphylaxis() {
             const patient = document.getElementById('proph-patient').value;
@@ -660,7 +994,6 @@
             }
 
             const childWeight = parseFloat(document.getElementById('proph-child-weight').value) || 20;
-
             currentProphOptions = [];
 
             if (patient === 'adult') {
@@ -794,16 +1127,14 @@
             const currentOpt = currentProphOptions[selectedProphIndex] || currentProphOptions[0];
             if (!currentOpt) return;
             
-            cart.push({
+            safeAddDrugToCart({
                 name: "PROFİLAKSİ: " + currentOpt.title,
                 posology: currentOpt.detail,
                 box: currentOpt.box || "1 Tek Doz Uygulama"
             });
-            updateCartBadge();
-            showToast("Profilaksi dozu reçeteye eklendi.");
         }
 
-        // --- STREAMING_CHUNK:Pediatric Actions... ---
+        // --- STREAMING_CHUNK:Pediatric & Adult Logic... ---
         // --- 2. PEDIATRIC MODULE ---
         function setPedWeight(w) {
             document.getElementById('ped-weight').value = w;
@@ -902,12 +1233,9 @@
 
         function addPediatricToCart() {
             if (!currentPedResult) return;
-            cart.push(currentPedResult);
-            updateCartBadge();
-            showToast("Pediatrik reçete sepetinize eklendi.");
+            safeAddDrugToCart(currentPedResult);
         }
 
-        // --- STREAMING_CHUNK:Adult & MRONJ Actions... ---
         // --- 3. ADULT MODULE ---
         function renderAdultCatalog() {
             const grid = document.getElementById('adult-drug-grid');
@@ -933,33 +1261,28 @@
         function addAdultDrugToCart(id) {
             const drug = adultCatalog.find(d => d.id === id);
             if (!drug) return;
-            cart.push({
+            safeAddDrugToCart({
                 name: drug.name,
                 posology: drug.posology,
                 box: drug.box
             });
-            updateCartBadge();
-            showToast(`${drug.name} eklendi.`);
         }
 
         function addTemplateKit(kitType) {
             if (kitType === 'tme') {
-                cart.push({ name: "Oksamen 20 mg Tablet", posology: "S: 1 x 1 (Tok)", box: "1 Kutu" });
-                cart.push({ name: "Parafon 300 mg/250 mg Tablet", posology: "S: 2 x 1 (Tok)", box: "1 Kutu" });
-                showToast("TME Reçete Şablonu Eklendi.");
+                safeAddDrugToCart({ name: "Oksamen 20 mg Tablet", posology: "S: 1 x 1 (Tok)", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Parafon 300 mg/250 mg Tablet", posology: "S: 2 x 1 (Tok)", box: "1 Kutu" });
             } else if (kitType === 'pregnancy') {
-                cart.push({ name: "Largopen 1g BID Tablet", posology: "S: 2 x 1 (12 saatte bir)", box: "1 Kutu" });
-                cart.push({ name: "Parol 500 mg Tablet", posology: "S: 2 x 1 (Ağrı durumunda)", box: "1 Kutu" });
-                showToast("Gebelik Rutin Şablonu Eklendi.");
+                safeAddDrugToCart({ name: "Largopen 1g BID Tablet", posology: "S: 2 x 1 (12 saatte bir)", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Parol 500 mg Tablet", posology: "S: 2 x 1 (Ağrı durumunda)", box: "1 Kutu" });
             } else if (kitType === 'abscess') {
-                cart.push({ name: "Largopen 1g BID Tablet", posology: "S: 2 x 1 (12 saatte bir)", box: "1 Kutu" });
-                cart.push({ name: "Flagyl 500 mg Tablet", posology: "S: 3 x 1 (8 saatte bir)", box: "1 Kutu" });
-                cart.push({ name: "Arveles 25 mg Film Tablet", posology: "S: 3 x 1 (8 saatte bir, tok)", box: "1 Kutu" });
-                showToast("Akut Apse Şablonu Eklendi.");
+                safeAddDrugToCart({ name: "Largopen 1g BID Tablet", posology: "S: 2 x 1 (12 saatte bir)", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Flagyl 500 mg Tablet", posology: "S: 3 x 1 (8 saatte bir)", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Arveles 25 mg Film Tablet", posology: "S: 3 x 1 (8 saatte bir, tok)", box: "1 Kutu" });
             }
-            updateCartBadge();
         }
 
+        // --- STREAMING_CHUNK:MRONJ & Cart Logic... ---
         // --- 4. MRONJ MODULE ---
         const mronjData = {
             1: {
@@ -1016,25 +1339,21 @@
             const reg = document.getElementById('mronj-regimen-select').value;
             
             if (reg === 'mronj_akut') {
-                cart.push({ name: "Sulcid 1 gr Ampül", posology: "S: 2 x 1 (İ.M.) - 5 / 7 / 10 Gün Kullanılacak", box: "2 Kutu" });
-                cart.push({ name: "Flagyl 500 mg Tablet", posology: "S: 2 x 1 - 5 / 7 / 10 Gün Kullanılacak", box: "1 Kutu" });
-                cart.push({ name: "Rutin Ağız Bakımı / Yıkama", posology: "Tedavi süresince devam edilecek", box: "-" });
+                safeAddDrugToCart({ name: "Sulcid 1 gr Ampül", posology: "S: 2 x 1 (İ.M.) - 5 / 7 / 10 Gün Kullanılacak", box: "2 Kutu" });
+                safeAddDrugToCart({ name: "Flagyl 500 mg Tablet", posology: "S: 2 x 1 - 5 / 7 / 10 Gün Kullanılacak", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Rutin Ağız Bakımı / Yıkama", posology: "Tedavi süresince devam edilecek", box: "-" });
             } else if (reg === 'mronj_stabil') {
-                cart.push({ name: "Augmentin 1 gr Tablet", posology: "S: 2 x 1 - 1 Hafta Kullanılacak", box: "1 Kutu" });
-                cart.push({ name: "Monodoks 100 mg Kapsül", posology: "S: 2 x 1 (İlk 2 hafta) Ardından 1 x 1 (Sonraki 2 hafta)", box: "2 Kutu" });
+                safeAddDrugToCart({ name: "Augmentin 1 gr Tablet", posology: "S: 2 x 1 - 1 Hafta Kullanılacak", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Monodoks 100 mg Kapsül", posology: "S: 2 x 1 (İlk 2 hafta) Ardından 1 x 1 (Sonraki 2 hafta)", box: "2 Kutu" });
             } else if (reg === 'mronj_pente') {
-                cart.push({ name: "Trentilin Retard 400 mg Tablet", posology: "S: 2 x 1", box: "1 Kutu" });
-                cart.push({ name: "Evicap 400 IU Kapsül", posology: "S: 1 x 1", box: "1 Kutu" });
-                cart.push({ name: "Flagyl 500 mg Tablet", posology: "S: 2 x 1 (Sadece Ayda 5 Gün Kullanılacak)", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Trentilin Retard 400 mg Tablet", posology: "S: 2 x 1", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Evicap 400 IU Kapsül", posology: "S: 1 x 1", box: "1 Kutu" });
+                safeAddDrugToCart({ name: "Flagyl 500 mg Tablet", posology: "S: 2 x 1 (Sadece Ayda 5 Gün Kullanılacak)", box: "1 Kutu" });
             } else if (reg === 'mronj_takip') {
-                cart.push({ name: "Rutin Ağız Bakımı", posology: "Tedavi süresince devam edilecek", box: "-" });
+                safeAddDrugToCart({ name: "Rutin Ağız Bakımı", posology: "Tedavi süresince devam edilecek", box: "-" });
             }
-
-            updateCartBadge();
-            showToast(`Adım ${selectedMronjStage} Reçete Protokolü Eklendi.`);
         }
 
-        // --- STREAMING_CHUNK:Cart and Search Actions... ---
         // --- 5. CART & SEARCH MODULE ---
         function updateCartBadge() {
             const badge = document.getElementById('cart-badge');
@@ -1062,13 +1381,11 @@
             renderCart();
         }
 
-        // Yeni Eklenen: İlaç Değiştirme ve Arama Fonksiyonları
         function openChangeModal(index) {
             currentChangeIndex = index;
             document.getElementById('change-drug-modal').classList.remove('hidden');
             document.getElementById('drug-search-input').value = '';
             searchDrug(); 
-            // Input'a odaklan (Kullanıcı deneyimi için)
             setTimeout(() => document.getElementById('drug-search-input').focus(), 100);
         }
 
@@ -1082,16 +1399,12 @@
             const resultsContainer = document.getElementById('drug-search-results');
             resultsContainer.innerHTML = '';
             
-            // Tüm ilaç havuzunu oluştur (Eğer daha önce oluşturulmadıysa)
             if (!window.allDrugsPool) {
                 window.allDrugsPool = [];
-                // Yetişkin İlaçları
                 adultCatalog.forEach(d => window.allDrugsPool.push({name: d.name, posology: d.posology, box: d.box}));
-                // Pediatrik İlaçlar
                 ['antibiotic', 'analgesic'].forEach(cat => {
-                    pedDb[cat].forEach(d => window.allDrugsPool.push({name: d.label, posology: "S: Hekim tarafından belirlenecektir (Doz ayarı gereklidir)", box: "1 Kutu"}));
+                    pedDb[cat].forEach(d => window.allDrugsPool.push({name: d.label, posology: "S: Hekim tarafından belirlenecektir", box: "1 Kutu"}));
                 });
-                // Diğer spesifik (MRONJ/Profilaksi) İlaçlar
                 window.allDrugsPool.push(
                     { name: "Sulcid 1 gr Ampül", posology: "S: 2 x 1 (İ.M.)", box: "2 Kutu" },
                     { name: "Monodoks 100 mg Kapsül", posology: "S: 2 x 1", box: "2 Kutu" },
@@ -1103,7 +1416,6 @@
                     { name: "Ampisilin (Penbisin 1000 mg Flakon)", posology: "S: 2 g IV veya IM TEK DOZ", box: "2 Flakon" }
                 );
                 
-                // İsim bazında duplicate olanları temizle
                 const seen = new Set();
                 window.allDrugsPool = window.allDrugsPool.filter(d => {
                     if (seen.has(d.name)) return false;
@@ -1112,10 +1424,8 @@
                 });
             }
             
-            // Filtreleme
             const filtered = window.allDrugsPool.filter(d => d.name.toLowerCase().includes(query) || d.posology.toLowerCase().includes(query));
             
-            // Listeyi HTML'e basma
             filtered.forEach(drug => {
                 const li = document.createElement('li');
                 li.className = 'p-3 hover:bg-teal-50 dark:hover:bg-teal-900/40 cursor-pointer border-b border-slate-100 dark:border-slate-800 transition-colors flex justify-between items-center group';
@@ -1128,6 +1438,10 @@
                 `;
                 li.onclick = () => {
                     if(currentChangeIndex > -1) {
+                        const check = checkDrugContraindication(drug.name);
+                        if(check.hasError) {
+                            showToast(`Uyarı: Bu ilaç da hastanın sistemik durumu ile kontrendike! (${check.reason})`, "warning");
+                        }
                         cart[currentChangeIndex] = {
                             name: drug.name,
                             posology: drug.posology,
@@ -1146,7 +1460,6 @@
             }
         }
 
-        // --- STREAMING_CHUNK:Cart Render Logic... ---
         function updateCartItem(index, field, value) {
             if (cart[index]) {
                 cart[index][field] = value;
@@ -1173,7 +1486,6 @@
                 const row = document.createElement('div');
                 row.className = "flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-700 pb-4 mb-2 print:p-0 print:border-none print:mb-4 group";
                 
-                // Değiştir (Refresh) ve Sil butonları eklendi
                 row.innerHTML = `
                     <div class="flex gap-4 items-start w-full min-w-0">
                         <div class="font-black text-lg text-slate-400 print:text-black mt-1">${index + 1}.</div>
@@ -1220,6 +1532,7 @@
             renderAdultCatalog();
             selectMronjStage(1);
             updateCartBadge();
+            renderSystemicCheckboxes();
         }
     </script>
 </body>
