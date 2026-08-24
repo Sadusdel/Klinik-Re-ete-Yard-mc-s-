@@ -1,35 +1,4 @@
-<!DOCTYPE html>
-<html lang="tr" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diş Hekimliği Klinik Reçete ve Profilaksi Rehberi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
-                    },
-                    colors: {
-                        teal: {
-                            50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf',
-                            500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
+<style>
     .active-tab {
         background-color: #0d9488; /* teal-600 */
         color: #ffffff;
@@ -72,8 +41,6 @@
     }
     .print-only { display: none; }
 </style>
-
-
 <header class="bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm print-hidden sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800">
     <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center gap-3">
@@ -179,7 +146,7 @@
                 <!-- Child weight conditional -->
                 <div id="proph-child-weight-box" class="hidden mb-6 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl">
                     <label class="block text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider mb-1">Çocuk Hasta Kilosu (kg)</label>
-                    <input type="number" id="proph-child-weight" value="20" min="5" max="50" oninput="calcProphylaxis()" class="w-32 p-2 bg-white dark:bg-slate-800 border border-amber-300 rounded-lg font-bold text-lg">
+                    <input type="number" id="proph-child-weight" value="20" min="5" max="60" oninput="calcProphylaxis()" class="w-32 p-2 bg-white dark:bg-slate-800 border border-amber-300 rounded-lg font-bold text-lg">
                 </div>
 
                 <!-- Multiple Options Selection Box -->
@@ -241,7 +208,7 @@
                         <i class="fa-solid fa-weight-scale text-teal-600 mr-1"></i> Hasta Kilosu (kg)
                     </label>
                     <div class="relative">
-                        <input type="number" id="ped-weight" min="3" max="50" value="15" step="0.5"
+                        <input type="number" id="ped-weight" min="3" max="60" value="15" step="0.5"
                             class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-xl text-slate-800 dark:text-white font-black transition-all"
                             oninput="runPediatricCalc()">
                     </div>
@@ -256,8 +223,8 @@
                         <button onclick="setPedWeight(18)" class="py-2 bg-slate-100 dark:bg-slate-800 hover:bg-teal-50 font-bold rounded-lg text-xs">18 kg</button>
                         <button onclick="setPedWeight(22)" class="py-2 bg-slate-100 dark:bg-slate-800 hover:bg-teal-50 font-bold rounded-lg text-xs">22 kg</button>
                         <button onclick="setPedWeight(26)" class="py-2 bg-slate-100 dark:bg-slate-800 hover:bg-teal-50 font-bold rounded-lg text-xs">26 kg</button>
-                        <button onclick="setPedWeight(30)" class="py-2 bg-slate-100 dark:bg-slate-800 hover:bg-teal-50 font-bold rounded-lg text-xs">30 kg</button>
                         <button onclick="setPedWeight(35)" class="py-2 bg-slate-100 dark:bg-slate-800 hover:bg-teal-50 font-bold rounded-lg text-xs">35 kg</button>
+                        <button onclick="setPedWeight(45)" class="py-2 bg-slate-100 dark:bg-slate-800 hover:bg-teal-50 font-bold rounded-lg text-xs">45 kg</button>
                     </div>
                 </div>
             </div>
@@ -313,7 +280,7 @@
 
                         <div class="bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-800/60 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                             <div class="text-left flex-1">
-                                <span class="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest block mb-1">Tek Seferde Verilecek Ölçek/Hacim</span>
+                                <span id="ped-res-main-label" class="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest block mb-1">Tek Seferde Verilecek Ölçek/Hacim</span>
                                 <div id="ped-res-ml" class="text-5xl font-black text-emerald-600 dark:text-emerald-400 font-mono">-- ml</div>
                                 <div id="ped-res-scale" class="text-sm font-bold text-emerald-800 dark:text-emerald-300 mt-2 bg-emerald-100 dark:bg-emerald-900/50 inline-block px-3 py-1 rounded-lg">-- ölçek</div>
                             </div>
@@ -824,6 +791,7 @@
             { id: "aug_200", label: "Augmentin 200/28.5 mg Oral Süspansiyon", baseDose: 40, doseType: "daily", conc_mg: 200, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "Amoksisilin bileşenine göredir." },
             { id: "aug_400", label: "Augmentin 400/57 mg Oral Süspansiyon", baseDose: 40, doseType: "daily", conc_mg: 400, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "Amoksisilin bileşenine göredir." },
             { id: "aug_es600", label: "Augmentin ES 600/42.9 mg Oral Süspansiyon", baseDose: 90, doseType: "daily", conc_mg: 600, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "Şiddetli enfeksiyon/otitis media." },
+            { id: "aug_1000_tab", label: "Augmentin BİD 1gr Film Tablet", baseDose: 40, doseType: "daily", isTablet: true, freq: 2, maxDaily_mg: 2000, note: "40 kg üzeri pediatrik/genç hastalar için." },
             { id: "macrol_125", label: "Macrol (Klaritromisin) 125 mg/5 ml Süspansiyon", baseDose: 15, doseType: "daily", conc_mg: 125, conc_ml: 5, freq: 2, maxDaily_mg: 1000, note: "12 saatte bir eşit aralıkla." },
             { id: "macrol_250", label: "Macrol (Klaritromisin) 250 mg/5 ml Süspansiyon", baseDose: 15, doseType: "daily", conc_mg: 250, conc_ml: 5, freq: 2, maxDaily_mg: 1000, note: "12 saatte bir eşit aralıkla." },
             { id: "sef_250", label: "Sef (Sefaleksin) 250 mg/5 ml Süspansiyon", baseDose: 30, doseType: "daily", conc_mg: 250, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "2 veya 4 eşit parçaya bölünerek." }
@@ -1214,7 +1182,7 @@
         });
     }
 
-    // --- PEDIATRIC MODULE (Augmentin Kuralı Eklendi) ---
+    // --- PEDIATRIC MODULE ---
     function setPedWeight(w) {
         document.getElementById('ped-weight').value = w;
         runPediatricCalc();
@@ -1248,8 +1216,9 @@
         const cat = document.getElementById('ped-category-select').value;
         const drugSelect = document.getElementById('ped-drug-select');
         let drugId = drugSelect.value;
+        const severity = document.getElementById('ped-severity-select').value;
 
-        // ÖZEL KURALLI KONTROL: Augmentin seçildiyse veya antibiyotik kategorisindeyken kiloya göre akıllı seçim
+        // Augmentin kilo kuralı (4 preparat: <20kg 200mg, [20-30)kg 400mg, [30-40)kg 600mg, >40kg Augmentin BİD 1gr Tab)
         if (cat === 'antibiotic') {
             let targetAugId = "aug_200";
             let weightRuleText = "Hasta Kilosu < 20 kg";
@@ -1263,20 +1232,22 @@
                 targetAugId = "aug_400";
                 weightRuleText = `Hasta Kilosu: ${weight} kg ([20 - 30) kg aralığında)`;
                 prepText = "Augmentin 400/57 mg Oral Süspansiyon";
-            } else if (weight >= 30 && weight < 40) {
+            } else if (weight >= 30 && weight <= 40) {
                 targetAugId = "aug_es600";
-                weightRuleText = `Hasta Kilosu: ${weight} kg ([30 - 40) kg aralığında)`;
+                weightRuleText = `Hasta Kilosu: ${weight} kg ([30 - 40] kg aralığında)`;
                 prepText = "Augmentin ES 600/42.9 mg Oral Süspansiyon";
+            } else if (weight > 40) {
+                targetAugId = "aug_1000_tab";
+                weightRuleText = `Hasta Kilosu: ${weight} kg (> 40 kg aşımı)`;
+                prepText = "Augmentin BİD 1gr Film Tablet";
             }
 
-            // Eğer kullanıcı mevcut seçimi Augmentin ailesinden yaptıysa veya otomatik kural işletmek istiyorsak
             const currentSelectedOption = pedDb.antibiotic.find(d => d.id === drugId);
             if (currentSelectedOption && currentSelectedOption.id.startsWith('aug')) {
                 if (drugId !== targetAugId) {
                     drugSelect.value = targetAugId;
                     drugId = targetAugId;
                     
-                    // Uyarı ekranını kullanıcıya gösterelim
                     document.getElementById('aug-rule-weight-info').innerText = weightRuleText;
                     document.getElementById('aug-rule-prep-info').innerText = prepText;
                     document.getElementById('augmentin-rule-modal').classList.remove('hidden');
@@ -1291,65 +1262,81 @@
         if (!drug) return;
 
         let targetBaseDose = drug.baseDose;
-        if (cat === 'antibiotic' && drug.id.startsWith('aug') && severityValCheck() === 'severe') {
+        if (cat === 'antibiotic' && drug.id.startsWith('aug') && severity === 'severe') {
             targetBaseDose = 80;
         }
 
-        let mgPerDose = 0;
-        let totalDailyMg = 0;
-        let hitMax = false;
+        const mainLabelElem = document.getElementById('ped-res-main-label');
+        const mlDiv = document.getElementById('ped-res-ml');
+        const scaleDiv = document.getElementById('ped-res-scale');
+        const mgDiv = document.getElementById('ped-res-mg');
+        const posologyDiv = document.getElementById('ped-res-posology');
 
-        if (drug.doseType === 'daily') {
-            totalDailyMg = weight * targetBaseDose;
-            if (totalDailyMg > drug.maxDaily_mg) {
-                totalDailyMg = drug.maxDaily_mg;
-                hitMax = true;
-            }
-            mgPerDose = totalDailyMg / drug.freq;
+        if (drug.isTablet) {
+            mainLabelElem.innerText = "TEK SEFERDE VERİLECEK TABLET ADEDİ";
+            mlDiv.innerText = "1 Tablet";
+            scaleDiv.innerText = "1 x 1 (12 saatte bir)";
+            mgDiv.innerText = "1000 mg / doz";
+            posologyDiv.innerText = "S: 2 x 1 (12 saatte bir, tok)";
+            
+            currentPedResult = {
+                name: `${drug.label} (${weight} kg)`,
+                posology: "S: 2 x 1 (12 saatte bir, tok)",
+                box: "1 Kutu"
+            };
         } else {
-            mgPerDose = weight * targetBaseDose;
-            totalDailyMg = mgPerDose * drug.freq;
-            if (totalDailyMg > drug.maxDaily_mg) {
-                totalDailyMg = drug.maxDaily_mg;
+            mainLabelElem.innerText = "TEK SEFERDE VERİLECEK ÖLÇEK/HACİM";
+            let mgPerDose = 0;
+            let totalDailyMg = 0;
+            let hitMax = false;
+
+            if (drug.doseType === 'daily') {
+                totalDailyMg = weight * targetBaseDose;
+                if (totalDailyMg > drug.maxDaily_mg) {
+                    totalDailyMg = drug.maxDaily_mg;
+                    hitMax = true;
+                }
                 mgPerDose = totalDailyMg / drug.freq;
-                hitMax = true;
+            } else {
+                mgPerDose = weight * targetBaseDose;
+                totalDailyMg = mgPerDose * drug.freq;
+                if (totalDailyMg > drug.maxDaily_mg) {
+                    totalDailyMg = drug.maxDaily_mg;
+                    mgPerDose = totalDailyMg / drug.freq;
+                    hitMax = true;
+                }
             }
+
+            const mlPerDose = (mgPerDose / drug.conc_mg) * drug.conc_ml;
+            const rawScale = mlPerDose / 5;
+            const scale = Math.ceil(rawScale * 2) / 2;
+            const finalMl = scale * 5;
+
+            document.getElementById('ped-ref-dose').innerText = `${targetBaseDose} mg/kg/${drug.doseType === 'daily' ? 'gün' : 'doz'}`;
+            document.getElementById('ped-ref-freq').innerText = `Günde ${drug.freq} kez`;
+            document.getElementById('ped-ref-conc').innerText = `${drug.conc_mg} mg / ${drug.conc_ml} ml`;
+            document.getElementById('ped-ref-note').innerText = drug.note || '';
+
+            mlDiv.innerText = `${finalMl.toFixed(1)} ml`;
+            scaleDiv.innerText = `~ ${scale.toFixed(1)} Ölçek (1 Ölçek = 5ml)`;
+            mgDiv.innerText = `${mgPerDose.toFixed(0)} mg / doz`;
+
+            let posology = `Günde ${drug.freq} x ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
+            if (drug.freq === 2) posology = `2x1 Sabah-Akşam ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
+            if (drug.freq === 3) posology = `3x1 8 saatte bir ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
+            if (drug.freq === 4) posology = `4x1 6 saatte bir ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
+
+            posologyDiv.innerText = posology;
+
+            const badge = document.getElementById('ped-max-badge');
+            if (hitMax) badge.classList.remove('hidden'); else badge.classList.add('hidden');
+
+            currentPedResult = {
+                name: `${drug.label} (${weight} kg)`,
+                posology: posology,
+                box: "1 Kutu Süspansiyon/Şurup"
+            };
         }
-
-        const mlPerDose = (mgPerDose / drug.conc_mg) * drug.conc_ml;
-        const rawScale = mlPerDose / 5;
-        const scale = Math.ceil(rawScale * 2) / 2;
-        const finalMl = scale * 5;
-
-        document.getElementById('ped-ref-dose').innerText = `${targetBaseDose} mg/kg/${drug.doseType === 'daily' ? 'gün' : 'doz'}`;
-        document.getElementById('ped-ref-freq').innerText = `Günde ${drug.freq} kez`;
-        document.getElementById('ped-ref-conc').innerText = `${drug.conc_mg} mg / ${drug.conc_ml} ml`;
-        document.getElementById('ped-ref-note').innerText = drug.note || '';
-
-        document.getElementById('ped-res-ml').innerText = `${finalMl.toFixed(1)} ml`;
-        document.getElementById('ped-res-scale').innerText = `~ ${scale.toFixed(1)} Ölçek (1 Ölçek = 5ml)`;
-        document.getElementById('ped-res-mg').innerText = `${mgPerDose.toFixed(0)} mg / doz`;
-
-        let posology = `Günde ${drug.freq} x ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
-        if (drug.freq === 2) posology = `2x1 Sabah-Akşam ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
-        if (drug.freq === 3) posology = `3x1 8 saatte bir ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
-        if (drug.freq === 4) posology = `4x1 6 saatte bir ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
-
-        document.getElementById('ped-res-posology').innerText = posology;
-
-        const badge = document.getElementById('ped-max-badge');
-        if (hitMax) badge.classList.remove('hidden'); else badge.classList.add('hidden');
-
-        currentPedResult = {
-            name: `${drug.label} (${weight} kg)`,
-            posology: posology,
-            box: "1 Kutu Süspansiyon/Şurup"
-        };
-    }
-
-    function severityValCheck() {
-        const el = document.getElementById('ped-severity-select');
-        return el ? el.value : 'standard';
     }
 
     function closeAugmentinModal() {
