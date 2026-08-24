@@ -1046,8 +1046,8 @@
             pendingContraDrug = null;
         }
 
-
-        // --- PROPHYLAXIS MODULE ---
+        // --- STREAMING_CHUNK:Prophylaxis Logic... ---
+        // --- 1. PROPHYLAXIS MODULE ---
         function calcProphylaxis() {
             const patient = document.getElementById('proph-patient').value;
             const allergy = document.getElementById('proph-allergy').value;
@@ -1107,9 +1107,14 @@
                 if (allergy === 'no') {
                     if (route === 'oral') {
                         const mg = Math.min(50 * childWeight, 2000);
+                        const ml = (mg / 200) * 5;
+                        const roundedMl = Math.ceil(ml * 2) / 2;
+                        const scale = roundedMl / 5;
+                        const finalRoundedScale = Math.ceil(scale * 2) / 2;
+                        const finalMl = finalRoundedScale * 5;
                         currentProphOptions.push({
-                            title: `Amoksisilin Pediatrik Süspansiyon (${childWeight} kg)`,
-                            detail: `${mg} mg (50 mg/kg - Max 2g) oral - İşlemden 30-60 dk önce TEK DOZ.`,
+                            title: `Largopen 200 mg/5 ml Oral Süspansiyon (${childWeight} kg)`,
+                            detail: `${mg} mg (${finalMl.toFixed(1)} ml ~ ${finalRoundedScale.toFixed(1)} Ölçek) oral - İşlemden 30-60 dk önce TEK DOZ.`,
                             box: "1 Kutu Süspansiyon"
                         });
                     } else {
@@ -1269,21 +1274,25 @@
             }
 
             const mlPerDose = (mgPerDose / drug.conc_mg) * drug.conc_ml;
-            const scale = mlPerDose / 5;
+            const rawScale = mlPerDose / 5;
+            
+            // Yuvarlama kuralı: 0.5'in katlarına (yarım ölçek kademelerine) yukarı yuvarlama (Ceiling 0.5 increments)
+            const scale = Math.ceil(rawScale * 2) / 2;
+            const finalMl = scale * 5;
 
             document.getElementById('ped-ref-dose').innerText = `${targetBaseDose} mg/kg/${drug.doseType === 'daily' ? 'gün' : 'doz'}`;
             document.getElementById('ped-ref-freq').innerText = `Günde ${drug.freq} kez`;
             document.getElementById('ped-ref-conc').innerText = `${drug.conc_mg} mg / ${drug.conc_ml} ml`;
             document.getElementById('ped-ref-note').innerText = drug.note || '';
 
-            document.getElementById('ped-res-ml').innerText = `${mlPerDose.toFixed(1)} ml`;
+            document.getElementById('ped-res-ml').innerText = `${finalMl.toFixed(1)} ml`;
             document.getElementById('ped-res-scale').innerText = `~ ${scale.toFixed(1)} Ölçek (1 Ölçek = 5ml)`;
             document.getElementById('ped-res-mg').innerText = `${mgPerDose.toFixed(0)} mg / doz`;
 
-            let posology = `Günde ${drug.freq} x ${mlPerDose.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
-            if (drug.freq === 2) posology = `2x1 Sabah-Akşam ${mlPerDose.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
-            if (drug.freq === 3) posology = `3x1 8 saatte bir ${mlPerDose.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
-            if (drug.freq === 4) posology = `4x1 6 saatte bir ${mlPerDose.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
+            let posology = `Günde ${drug.freq} x ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
+            if (drug.freq === 2) posology = `2x1 Sabah-Akşam ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
+            if (drug.freq === 3) posology = `3x1 8 saatte bir ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
+            if (drug.freq === 4) posology = `4x1 6 saatte bir ${finalMl.toFixed(1)} ml (${scale.toFixed(1)} ölçek)`;
 
             document.getElementById('ped-res-posology').innerText = posology;
 
