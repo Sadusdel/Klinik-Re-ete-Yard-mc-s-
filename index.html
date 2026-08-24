@@ -223,7 +223,7 @@
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
                             <tr><td class="p-3 font-semibold">Yetişkin</td><td class="p-3 text-emerald-600 font-bold">Yok</td><td class="p-3">Oral</td><td class="p-3">Amoksisilin (Largopen 1000 mg): 2 tablet (2 g)</td></tr>
-                            <tr><td class="p-3 font-semibold">Çocuk</td><td class="p-3 text-emerald-600 font-bold">Yok</td><td class="p-3">Oral</td><td class="p-3">Amoksisilin: (Largopen 200 mg/5ml Oral Suspansiyon) 50 mg/kg (Maksimum 2 g)</td></tr>
+                            <tr><td class="p-3 font-semibold">Çocuk</td><td class="p-3 text-emerald-600 font-bold">Yok</td><td class="p-3">Oral</td><td class="p-3">Amoksisilin: 50 mg/kg (Maksimum 2 g)</td></tr>
                             <tr><td class="p-3 font-semibold">Yetişkin</td><td class="p-3 text-emerald-600 font-bold">Yok</td><td class="p-3">Parenteral</td><td class="p-3">Ampisilin (Penbisin 1000 mg): 2 ampul/flakon (2 g IV/IM)</td></tr>
                             <tr><td class="p-3 font-semibold">Çocuk</td><td class="p-3 text-emerald-600 font-bold">Yok</td><td class="p-3">Parenteral</td><td class="p-3">Ampisilin: 50 mg/kg (Maksimum 2 g IV/IM)</td></tr>
                             <tr><td class="p-3 font-semibold">Yetişkin</td><td class="p-3 text-red-500 font-bold">VAR</td><td class="p-3">Oral</td><td class="p-3">Sefaleksin (Sef 1 g): 2 tablet (2 g) VEYA Azitromisin (Azitro 500 mg): 1 tablet (500 mg) VEYA Klindamisin (Cleosin 300 mg): 2 kapsül (600 mg)</td></tr>
@@ -597,17 +597,17 @@
                 </div>
 
                 <div class="p-3.5 bg-teal-50 dark:bg-teal-950/30 rounded-xl border border-teal-200 dark:border-teal-800">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 block mb-1">Doğrudan Reçeteye Eklenecek "Yerine Önerilen" Alternatif</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 block mb-1">Reçeteye Eklenecek "Yerine Önerilen" Alternatif</span>
                     <p id="warn-alternative" class="text-xs font-bold text-teal-900 dark:text-teal-200">--</p>
                 </div>
             </div>
 
             <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex gap-2 justify-end">
-                <button onclick="closeContraindicationModal()" class="px-4 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all">
+                <button id="btn-cancel-modal" onclick="closeContraindicationModal()" class="px-4 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all">
                     Vazgeç (Ekleme)
                 </button>
                 <button onclick="applyAlternativeDirectly()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Alternatifi Doğrudan Reçeteye Ekle
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Alternatifi Reçeteye Uygula
                 </button>
             </div>
         </div>
@@ -827,7 +827,7 @@
         let selectedProphIndex = 0;
         let currentChangeIndex = -1;
 
-        // Geçici kontrendikasyon tetikleme verisi
+        // Geçici kontrendikasyon tetikleme verisi (isExisting parametresi reçetede olan ilaçlar içindir)
         let pendingContraDrug = null;
 
         // --- NAVIGATION & THEME ---
@@ -861,18 +861,18 @@
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            const bg = type === 'success' ? 'bg-teal-700' : (type === 'warning' ? 'bg-amber-600' : 'bg-slate-800');
+            const bg = type === 'success' ? 'bg-teal-700' : (type === 'warning' ? 'bg-amber-600' : (type === 'error' ? 'bg-rose-600' : 'bg-slate-800'));
             toast.className = `${bg} text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm font-bold toast-enter pointer-events-auto`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ${msg}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-circle-exclamation text-white'}"></i> ${msg}`;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.classList.remove('toast-enter');
                 toast.classList.add('toast-exit');
                 setTimeout(() => toast.remove(), 300);
-            }, 2500);
+            }, 3000);
         }
 
-        // --- STREAMING_CHUNK:Systemic Conditions & Contraindication Management... ---
+        // --- SYSTEMIC CONDITIONS & CONTRAINDICATION MANAGEMENT ---
         function openSystemicModal() {
             document.getElementById('systemic-modal').classList.remove('hidden');
             renderSystemicCheckboxes();
@@ -903,6 +903,8 @@
         function toggleSystemicCondition(id, isChecked) {
             if (isChecked) {
                 activeSystemicConditions[id] = true;
+                // EĞER SONRADAN İŞARETLENMİŞSE MEVCUT SEPETTEKİ İLAÇLARI TARAYALIM
+                checkCartForContraindications();
             } else {
                 delete activeSystemicConditions[id];
             }
@@ -913,6 +915,36 @@
             const count = Object.keys(activeSystemicConditions).length;
             document.getElementById('active-cond-count').innerText = count;
             document.getElementById('active-cond-summary').innerText = `Aktif Sistemik Durum: ${count} seçildi`;
+        }
+
+        // REÇETEDE BULUNAN İLAÇLARI TEKRAR KONTROL EDEN YENİ FONKSİYON
+        function checkCartForContraindications() {
+            for (let i = 0; i < cart.length; i++) {
+                const drug = cart[i];
+                const check = checkDrugContraindication(drug.name);
+                
+                if (check.hasError) {
+                    // Reçetede bulunan bir ilaç kontrendike oldu. Modalı bu ilaca göre açıyoruz.
+                    pendingContraDrug = { 
+                        ...drug, 
+                        isExisting: true, // Sepette halihazırda var olduğunu belirtir
+                        cartIndex: i, 
+                        altReplacement: check.alternativeObj 
+                    };
+                    
+                    document.getElementById('warn-drug-name').innerText = drug.name;
+                    document.getElementById('warn-reason').innerText = check.reason;
+                    document.getElementById('warn-alternative').innerText = `${check.alternativeObj.name} (${check.alternativeObj.posology})`;
+                    
+                    // Buton ismini mevcut ilaca göre değiştir
+                    document.getElementById('btn-cancel-modal').innerText = "Vazgeç (Sepetten Çıkar)";
+                    
+                    document.getElementById('contraindication-modal').classList.remove('hidden');
+                    
+                    // İlk tehlikeli ilaçta duruyoruz. İşlem bitince setTimeout ile tekrar taranacak.
+                    return; 
+                }
+            }
         }
 
         // --- CONTRAINDICATION & AUTOMATIC REPLACEMENT ENGINE ---
@@ -940,13 +972,18 @@
         function safeAddDrugToCart(drugObj) {
             const check = checkDrugContraindication(drugObj.name);
             if (check.hasError) {
-                // Söz konusu ilaç kontrendike ise reçete önizlemesine EKLENMEZ, modal uyarısı açılır.
-                pendingContraDrug = drugObj;
+                // Yeni eklenecek olan ilaç kontrendike ise modal açılır
+                pendingContraDrug = { 
+                    ...drugObj, 
+                    isExisting: false, 
+                    altReplacement: check.alternativeObj 
+                };
+                
                 document.getElementById('warn-drug-name').innerText = drugObj.name;
                 document.getElementById('warn-reason').innerText = check.reason;
                 document.getElementById('warn-alternative').innerText = `${check.alternativeObj.name} (${check.alternativeObj.posology})`;
-                // Alternatif objesini geçici sakla
-                pendingContraDrug.altReplacement = check.alternativeObj;
+                
+                document.getElementById('btn-cancel-modal').innerText = "Vazgeç (Ekleme)";
 
                 document.getElementById('contraindication-modal').classList.remove('hidden');
                 return false;
@@ -959,6 +996,18 @@
         }
 
         function closeContraindicationModal() {
+            // Eğer bu uyarı HALİHAZIRDA SEPETTE OLAN bir ilaç için çıktıysa ve hekim "Vazgeç" dediyse:
+            // Tehlikeli ilacı sepetten silmeliyiz!
+            if (pendingContraDrug && pendingContraDrug.isExisting) {
+                cart.splice(pendingContraDrug.cartIndex, 1);
+                updateCartBadge();
+                renderCart();
+                showToast("Tehlikeli / Kontrendike ilaç reçeteden çıkarıldı.", "error");
+                
+                // Belki sepette başka tehlikeli ilaçlar da vardır, küçük bir gecikme ile tekrar tarayalım
+                setTimeout(checkCartForContraindications, 400);
+            }
+            
             document.getElementById('contraindication-modal').classList.add('hidden');
             pendingContraDrug = null;
         }
@@ -966,21 +1015,39 @@
         function applyAlternativeDirectly() {
             if (!pendingContraDrug || !pendingContraDrug.altReplacement) return;
             
-            // "Alternatifi doğrudan reçeteye ekle" seçildiğinde, söz konusu ilaç eklenmez, yerine önerilen alternatif eklenir.
             const alt = pendingContraDrug.altReplacement;
-            cart.push({
-                name: alt.name,
-                posology: alt.posology,
-                box: alt.box
-            });
+            
+            if (pendingContraDrug.isExisting) {
+                // Sepette var olan tehlikeli ilacın ÜSTÜNE alternatifi yazdırıyoruz (Değiştirme İşlemi)
+                cart[pendingContraDrug.cartIndex] = {
+                    name: alt.name,
+                    posology: alt.posology,
+                    box: alt.box
+                };
+                showToast("Sepetteki tehlikeli ilaç otomatik olarak güvenli alternatifiyle değiştirildi.", "success");
+                
+                // Değişimden sonra kalan diğer ilaçları tekrar tara
+                setTimeout(checkCartForContraindications, 400);
+                
+            } else {
+                // Sadece yeni eklenecek ilacı engelleyip, alternatifi yeni olarak ekliyoruz
+                cart.push({
+                    name: alt.name,
+                    posology: alt.posology,
+                    box: alt.box
+                });
+                showToast("Kontrendike ilaç engellendi; 'yerine önerilen' alternatif reçeteye doğrudan eklendi.", "warning");
+            }
             
             updateCartBadge();
-            showToast("Kontrendike ilaç engellendi; 'yerine önerilen' alternatif reçeteye doğrudan eklendi.", "warning");
-            closeContraindicationModal();
+            renderCart();
+            
+            document.getElementById('contraindication-modal').classList.add('hidden');
+            pendingContraDrug = null;
         }
 
-        // --- STREAMING_CHUNK:Prophylaxis Logic... ---
-        // --- 1. PROPHYLAXIS MODULE ---
+
+        // --- PROPHYLAXIS MODULE ---
         function calcProphylaxis() {
             const patient = document.getElementById('proph-patient').value;
             const allergy = document.getElementById('proph-allergy').value;
@@ -1041,7 +1108,7 @@
                     if (route === 'oral') {
                         const mg = Math.min(50 * childWeight, 2000);
                         currentProphOptions.push({
-                            title: `Largopen 200 mg/5 ml (${childWeight} kg)`,
+                            title: `Amoksisilin Pediatrik Süspansiyon (${childWeight} kg)`,
                             detail: `${mg} mg (50 mg/kg - Max 2g) oral - İşlemden 30-60 dk önce TEK DOZ.`,
                             box: "1 Kutu Süspansiyon"
                         });
@@ -1134,8 +1201,7 @@
             });
         }
 
-        // --- STREAMING_CHUNK:Pediatric & Adult Logic... ---
-        // --- 2. PEDIATRIC MODULE ---
+        // --- PEDIATRIC MODULE ---
         function setPedWeight(w) {
             document.getElementById('ped-weight').value = w;
             runPediatricCalc();
@@ -1236,7 +1302,7 @@
             safeAddDrugToCart(currentPedResult);
         }
 
-        // --- 3. ADULT MODULE ---
+        // --- ADULT MODULE ---
         function renderAdultCatalog() {
             const grid = document.getElementById('adult-drug-grid');
             grid.innerHTML = '';
@@ -1282,8 +1348,7 @@
             }
         }
 
-        // --- STREAMING_CHUNK:MRONJ & Cart Logic... ---
-        // --- 4. MRONJ MODULE ---
+        // --- MRONJ MODULE ---
         const mronjData = {
             1: {
                 title: "I - İLK GELİŞ: Akut Enfeksiyon",
@@ -1354,7 +1419,7 @@
             }
         }
 
-        // --- 5. CART & SEARCH MODULE ---
+        // --- CART & SEARCH MODULE ---
         function updateCartBadge() {
             const badge = document.getElementById('cart-badge');
             badge.innerText = cart.length;
