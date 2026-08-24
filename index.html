@@ -243,7 +243,7 @@
                     <div class="relative">
                         <input type="number" id="ped-weight" min="3" max="50" value="15" step="0.5"
                             class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-xl text-slate-800 dark:text-white font-black transition-all"
-                            oninput="runPediatricCalc()">
+                            oninput="schedulePediatricCalc()">
                     </div>
                 </div>
                 
@@ -824,6 +824,7 @@
             { id: "aug_200", label: "Augmentin 200/28.5 mg Oral Süspansiyon", baseDose: 40, doseType: "daily", conc_mg: 200, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "Amoksisilin bileşenine göredir." },
             { id: "aug_400", label: "Augmentin 400/57 mg Oral Süspansiyon", baseDose: 40, doseType: "daily", conc_mg: 400, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "Amoksisilin bileşenine göredir." },
             { id: "aug_es600", label: "Augmentin ES 600/42.9 mg Oral Süspansiyon", baseDose: 90, doseType: "daily", conc_mg: 600, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "Şiddetli enfeksiyon/otitis media." },
+            { id: "aug_bid_1g_tab", label: "Augmentin BİD 1gr Tab d1(bir)b S:2x1", form: "tablet", baseDose: 1000, doseType: "fixed", freq: 2, note: "40 kg üzeri pediatrik hastalarda tablet preparat seçeneği." },
             { id: "macrol_125", label: "Macrol (Klaritromisin) 125 mg/5 ml Süspansiyon", baseDose: 15, doseType: "daily", conc_mg: 125, conc_ml: 5, freq: 2, maxDaily_mg: 1000, note: "12 saatte bir eşit aralıkla." },
             { id: "macrol_250", label: "Macrol (Klaritromisin) 250 mg/5 ml Süspansiyon", baseDose: 15, doseType: "daily", conc_mg: 250, conc_ml: 5, freq: 2, maxDaily_mg: 1000, note: "12 saatte bir eşit aralıkla." },
             { id: "sef_250", label: "Sef (Sefaleksin) 250 mg/5 ml Süspansiyon", baseDose: 30, doseType: "daily", conc_mg: 250, conc_ml: 5, freq: 2, maxDaily_mg: 2000, note: "2 veya 4 eşit parçaya bölünerek." }
@@ -853,6 +854,7 @@
     let cart = [];
     let activeSystemicConditions = {}; // { conditionId: true/false }
     let currentPedResult = null;
+    let pedCalcDebounceTimer = null;
     let selectedMronjStage = 2;
     let currentProphOptions = [];
     let selectedProphIndex = 0;
@@ -1217,7 +1219,7 @@
     // --- PEDIATRIC MODULE (Augmentin Kuralı Eklendi) ---
     function setPedWeight(w) {
         document.getElementById('ped-weight').value = w;
-        runPediatricCalc();
+        schedulePediatricCalc();
     }
 
     function populatePedDrugs() {
@@ -1243,6 +1245,15 @@
         runPediatricCalc();
     }
 
+    // Kilo girişi tamamlandıktan 1 saniye sonra hesaplama/uyarı çalışır.
+    // Böylece kullanıcı sayı yazarken Augmentin uyarı penceresi rahatsız etmez.
+    function schedulePediatricCalc() {
+        clearTimeout(pedCalcDebounceTimer);
+        pedCalcDebounceTimer = setTimeout(() => {
+            runPediatricCalc();
+        }, 1000);
+    }
+
     function runPediatricCalc() {
         const weight = parseFloat(document.getElementById('ped-weight').value) || 0;
         const cat = document.getElementById('ped-category-select').value;
@@ -1263,10 +1274,14 @@
                 targetAugId = "aug_400";
                 weightRuleText = `Hasta Kilosu: ${weight} kg ([20 - 30) kg aralığında)`;
                 prepText = "Augmentin 400/57 mg Oral Süspansiyon";
-            } else if (weight >= 30 && weight < 40) {
+            } else if (weight >= 30 && weight <= 40) {
                 targetAugId = "aug_es600";
-                weightRuleText = `Hasta Kilosu: ${weight} kg ([30 - 40) kg aralığında)`;
+                weightRuleText = `Hasta Kilosu: ${weight} kg ([30 - 40] kg aralığında)`;
                 prepText = "Augmentin ES 600/42.9 mg Oral Süspansiyon";
+            } else if (weight > 40) {
+                targetAugId = "aug_bid_1g_tab";
+                weightRuleText = `Hasta Kilosu: ${weight} kg (> 40 kg)`;
+                prepText = "Augmentin BİD 1gr Tab d1(bir)b S:2x1";
             }
 
             // Eğer kullanıcı mevcut seçimi Augmentin ailesinden yaptıysa veya otomatik kural işletmek istiyorsak
@@ -1293,6 +1308,30 @@
         let targetBaseDose = drug.baseDose;
         if (cat === 'antibiotic' && drug.id.startsWith('aug') && severityValCheck() === 'severe') {
             targetBaseDose = 80;
+        }
+
+        // 40 kg üzeri için tablet preparatı: sabit 1 g/doz, günde 2 kez.
+        if (drug.form === "tablet") {
+            const mgPerDoseTablet = drug.baseDose;
+
+            document.getElementById('ped-ref-dose').innerText = "1 tablet/doz";
+            document.getElementById('ped-ref-freq').innerText = `Günde ${drug.freq} kez`;
+            document.getElementById('ped-ref-conc').innerText = "1000 mg / tablet";
+            document.getElementById('ped-ref-note').innerText = drug.note || '';
+
+            document.getElementById('ped-res-ml').innerText = "1 Tablet";
+            document.getElementById('ped-res-scale').innerText = "S: 2x1";
+            document.getElementById('ped-res-mg').innerText = `${mgPerDoseTablet} mg / doz`;
+            document.getElementById('ped-res-posology').innerText = "S: 2x1";
+
+            document.getElementById('ped-max-badge').classList.add('hidden');
+
+            currentPedResult = {
+                name: `${drug.label} (${weight} kg)`,
+                posology: "S: 2x1",
+                box: "1 Kutu"
+            };
+            return;
         }
 
         let mgPerDose = 0;
