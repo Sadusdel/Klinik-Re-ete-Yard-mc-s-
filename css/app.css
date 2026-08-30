@@ -1,0 +1,13 @@
+/* Application-level styles. Tailwind utility classes remain available during migration. */
+
+:root {
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
+}
+
+[hidden] {
+  display: none !important;
+}
