@@ -8,9 +8,7 @@
   color-scheme: dark;
 }
 
-/* Dark-mode readability fixes.
-   Keep existing component/layout styles intact; only correct foreground colors
-   that otherwise remain too dark on the dark background. */
+/* Dark-mode readability fixes. */
 .dark .text-black,
 .dark .text-slate-900,
 .dark .text-slate-800,
@@ -44,6 +42,15 @@
 .dark textarea::placeholder {
   color: #94a3b8;
   opacity: 1;
+}
+
+/* Prophylaxis reference table: all table content must remain readable in dark mode. */
+.dark #sec-prophylaxis table,
+.dark #sec-prophylaxis table td,
+.dark #sec-prophylaxis table th,
+.dark #sec-prophylaxis table span,
+.dark #sec-prophylaxis table p {
+  color: #ffffff !important;
 }
 
 [hidden] {
