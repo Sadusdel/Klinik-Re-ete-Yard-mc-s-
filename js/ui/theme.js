@@ -29,6 +29,9 @@ const DARK_MODE_READABILITY_CSS = `
   .dark select,
   .dark input,
   .dark textarea { color: #f8fafc !important; }
+  .dark select::placeholder,
+  .dark input::placeholder,
+  .dark textarea::placeholder { color: #cbd5e1 !important; opacity: 1; }
   .dark option { background: #0f172a; color: #f8fafc; }
 `;
 
