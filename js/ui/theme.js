@@ -1,7 +1,7 @@
 import { storageGet, storageSet } from '../core/storage.js';
 
 const DARK_MODE_READABILITY_CSS = `
-  .dark body { color: #e2e8f0; }
+  .dark body { color: #e2e8f0; background-color: #1e293b !important; }
   .dark .text-black,
   .dark .text-slate-900,
   .dark .text-slate-800,
@@ -18,7 +18,7 @@ const DARK_MODE_READABILITY_CSS = `
   .dark table td,
   .dark table td * { color: #e2e8f0 !important; }
   .dark table th,
-  .dark table th * { color: #dbeafe !important; }
+  .dark table th * { color: #ffffff !important; }
   .dark table,
   .dark td,
   .dark th,
@@ -28,11 +28,14 @@ const DARK_MODE_READABILITY_CSS = `
   .dark span { text-shadow: none; }
   .dark select,
   .dark input,
-  .dark textarea { color: #f8fafc !important; }
+  .dark textarea { color: #f8fafc !important; background-color: #334155 !important; }
   .dark select::placeholder,
   .dark input::placeholder,
   .dark textarea::placeholder { color: #cbd5e1 !important; opacity: 1; }
-  .dark option { background: #0f172a; color: #f8fafc; }
+  .dark option { background: #334155; color: #f8fafc; }
+  .dark .bg-white { background-color: #273449 !important; }
+  .dark .bg-gray-50,
+  .dark .bg-slate-50 { background-color: #273449 !important; }
 `;
 
 function ensureDarkModeReadability() {
