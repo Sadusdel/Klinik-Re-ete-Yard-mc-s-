@@ -1,0 +1,25 @@
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .print-hidden {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  input,
+  select,
+  textarea {
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    appearance: none !important;
+  }
+}
