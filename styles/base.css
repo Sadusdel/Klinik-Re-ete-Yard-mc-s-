@@ -1,0 +1,136 @@
+/* 
+  Base Styles - Color, Typography, Layout Foundations
+  Ensures proper contrast and readability in both light and dark modes
+*/
+
+:root {
+  --color-text-primary-light: #1e293b; /* slate-900 */
+  --color-text-primary-dark: #f1f5f9; /* slate-100 */
+  --color-text-secondary-light: #64748b; /* slate-500 */
+  --color-text-secondary-dark: #cbd5e1; /* slate-300 */
+  --color-bg-light: #f8fafc; /* slate-50 */
+  --color-bg-dark: #0f172a; /* slate-950 */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-primary-light);
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark body {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-primary-dark);
+}
+
+/* Ensure minimum contrast for all text */
+h1, h2, h3, h4, h5, h6 {
+  color: inherit;
+  font-weight: 700;
+}
+
+p, span, label {
+  color: inherit;
+}
+
+/* Improve placeholder text visibility */
+::placeholder {
+  color: var(--color-text-secondary-light);
+  opacity: 0.7;
+}
+
+html.dark ::placeholder {
+  color: var(--color-text-secondary-dark);
+  opacity: 0.8;
+}
+
+/* Input and textarea base styles */
+input, textarea, select {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  background-color: #ffffff;
+  color: var(--color-text-primary-light);
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="number"],
+html.dark input[type="date"],
+html.dark textarea,
+html.dark select {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark select:focus {
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* Links */
+a {
+  color: #0d9488;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #0f766e;
+}
+
+html.dark a {
+  color: #14b8a6;
+}
+
+html.dark a:hover {
+  color: #5eead4;
+}
+
+/* Ensure buttons are accessible */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  border-radius: 0.75rem;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
